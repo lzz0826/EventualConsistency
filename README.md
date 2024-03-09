@@ -1,5 +1,7 @@
 # EventualConsistency 緩存最終一致性:
 
+![image](https://github.com/lzz0826/EventualConsistency/blob/main/img/003.png)
+
 ## 對於分散式事務，常用的解決方案根據一致性的程度可以進行如下劃分：
 
   * 強一致性(2PC、3PC)：資料庫層面的實現，透過鎖定資源，犧牲可用性，確保資料的強一致性，效率相對比較低。
@@ -49,6 +51,7 @@
 寫 + 寫 阻塞鎖釋放 <br />
 讀 + 寫 有讀鎖 寫也必須等待 <br />
 只要有寫的存在 都必須等待 <br />
+![image](https://github.com/lzz0826/EventualConsistency/blob/main/img/002.png)
 
  *信號量也作為分布式限流
 
@@ -56,7 +59,13 @@
 
 數據一致性  <br />
 1.雙寫模式 (不加鎖會髒讀)  <br />
+![image](https://github.com/lzz0826/EventualConsistency/blob/main/img/004.png)
+  
 2.失效模式 (不加鎖會髒讀) 可以加讀寫鎖  <br />
+![image](https://github.com/lzz0826/EventualConsistency/blob/main/img/005.png)
+  
+
+
 
 <br />
 
