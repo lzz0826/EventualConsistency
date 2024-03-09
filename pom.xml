@@ -1,0 +1,166 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.example</groupId>
+  <artifactId>EventualConsistency</artifactId>
+  <version>1.0-SNAPSHOT</version>
+
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.3.9.RELEASE</version>
+    <relativePath/>
+  </parent>
+
+  <modules>
+    <module>Dept-8001</module>
+    <module>Common</module>
+  </modules>
+
+
+  <!-- 定義專案的打包類型，這裡設置為 pom 表示這是一個父專案 -->
+  <packaging>pom</packaging>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- 定義 Maven 編譯器的源碼版本 -->
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <!-- 定義 Maven 編譯器的目標版本 -->
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <junit.version>4.12</junit.version>
+    <log4j.version>1.2.17</log4j.version>
+    <lombok.version>1.16.18</lombok.version>
+    <version.netty>4.1.59.Final</version.netty>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+
+<!--      &lt;!&ndash; Spring Boot 依賴管理 &ndash;&gt;-->
+<!--      <dependency>-->
+<!--        <groupId>org.springframework.boot</groupId>-->
+<!--        <artifactId>spring-boot-dependencies</artifactId>-->
+<!--        <version>2.3.4.RELEASE</version>-->
+<!--        <type>pom</type>-->
+<!--        <scope>import</scope>-->
+<!--      </dependency>-->
+
+      <dependency>
+        <groupId>org.mybatis</groupId>
+        <artifactId>mybatis</artifactId>
+        <version>3.4.6</version>
+      </dependency>
+
+      <!-- MySQL 依賴 -->
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>8.0.13</version>
+      </dependency>
+
+      <!-- Redis -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-redis</artifactId>
+        <version>3.2.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-pool2</artifactId>
+        <version>2.11.1</version>
+      </dependency>
+
+      <!-- Redisson 分布式鎖工具 -->
+      <dependency>
+        <groupId>org.redisson</groupId>
+        <artifactId>redisson</artifactId>
+        <version>3.24.3</version>
+      </dependency>
+
+
+      <!-- Netty 配合Redisson 解決mac os
+      io.netty.resolver.dns.macos.MacOSDnsServerAddressStreamProvider 錯誤 -->
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-resolver-dns-native-macos</artifactId>
+        <version>${version.netty}</version>
+        <scope>runtime</scope>
+        <classifier>osx-x86_64</classifier>
+      </dependency>
+
+<!--    Spring cache 緩存管理器 -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-cache</artifactId>
+        <version>3.0.2</version>
+      </dependency>
+
+
+
+      <!-- MyBatis Spring Boot Starter 依賴 -->
+      <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+        <version>1.3.2</version>
+      </dependency>
+
+
+      <!-- JUnit 依賴 -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <!-- Log4j 依賴 -->
+      <dependency>
+        <groupId>log4j</groupId>
+        <artifactId>log4j</artifactId>
+        <version>${log4j.version}</version>
+      </dependency>
+
+      <!-- json 轉換器 -->
+      <dependency>
+        <groupId>com.alibaba</groupId>
+        <artifactId>fastjson</artifactId>
+        <version>2.0.23</version>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
+  <!-- Maven 構建配置 -->
+  <build>
+    <!-- 定義最終生成文件的名稱 -->
+    <finalName>EventualConsistency</finalName>
+
+    <!-- 資源文件處理配置 -->
+    <resources>
+      <!-- 指定資源文件目錄以及是否啟用過濾器 -->
+      <resource>
+        <directory>src/main/resources</directory> <!-- 資源文件目錄 -->
+        <filtering>true</filtering> <!-- 是否啟用過濾器 -->
+      </resource>
+    </resources>
+
+    <!-- Maven 資源插件配置 -->
+    <plugins>
+      <!-- 定義 Maven 資源插件 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <!-- 使用  resources-plugin 插件-->
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <!-- 定義過濾器分隔符 -->
+          <delimiters>
+            <delimiter>$</delimiter>
+          </delimiters>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+</project>
