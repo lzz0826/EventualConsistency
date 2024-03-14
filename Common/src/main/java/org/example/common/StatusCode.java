@@ -55,6 +55,13 @@ public enum StatusCode {
    */
   UpdateStockFail(3000,"更新訂單失敗"),
 
+  StockServerError(3001,"Stock服務異常"),
+
+
+  NoStock(3002,"沒有庫存"),
+
+
+
 
   ;
 

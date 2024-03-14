@@ -22,7 +22,7 @@ public class OkHttpController {
 
   @GetMapping("/findStockById/{id}")
   public BaseResp<Stock> sendMsg(@PathVariable("id")Long id) throws OkHttpGetException {
-    BaseResp<Stock> baseResp = stockClientService.stockFindStockById(id);
+    BaseResp<Stock> baseResp = stockClientService.getStockById(id);
     return baseResp;
   }
 

@@ -16,6 +16,9 @@ public interface StockDao {
   public int updateStock(Stock stock);
 
 
+  public Stock findByProductName(String ProductName);
+
+
 
 
 }

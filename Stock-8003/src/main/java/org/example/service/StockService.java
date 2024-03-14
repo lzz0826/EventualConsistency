@@ -13,8 +13,13 @@ public class StockService {
   @Resource
   public StockDao dao;
 
-  public Stock findStockById(Long id){
+  public Stock getStockById(Long id){
     Stock stock = dao.findById(id);
+    return stock;
+  }
+
+  public Stock getStockByProductName(String productName){
+    Stock stock = dao.findByProductName(productName);
     return stock;
   }
 

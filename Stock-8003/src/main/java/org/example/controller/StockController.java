@@ -23,11 +23,19 @@ public class StockController {
   @Resource
   public StockService stockService;
 
-  @GetMapping("findStockById/{id}")
+  @GetMapping("getStockById/{id}")
   public BaseResp<Stock> findStockById(@PathVariable("id")Long id){
-    Stock stock = stockService.findStockById(id);
+    Stock stock = stockService.getStockById(id);
     return BaseResp.ok(stock);
   }
+
+
+  @GetMapping("getStockByProductName/{productName}")
+  public BaseResp<Stock> getStockByProductName(@PathVariable("productName")String productName){
+    Stock stock = stockService.getStockByProductName(productName);
+    return BaseResp.ok(stock);
+  }
+
 
   @PostMapping("updateStock")
   public BaseResp<String> updateStock(@RequestBody @Valid UpdateStockReq req) throws UpdateStockException {

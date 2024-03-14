@@ -68,4 +68,9 @@
     SELECT * FROM t_stock;
   </select>
 
+
+  <select resultMap="BaseResultMap" id="findByProductName" resultType="org.example.entities.Stock">
+    SELECT * FROM t_stock Where product_name = #{product_name};
+  </select>
+
 </mapper>
