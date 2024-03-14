@@ -16,6 +16,8 @@
   <modules>
     <module>Dept-8001</module>
     <module>Common</module>
+    <module>Order-8002</module>
+    <module>Stock-8003</module>
   </modules>
 
 
@@ -127,6 +129,38 @@
         <artifactId>fastjson</artifactId>
         <version>2.0.23</version>
       </dependency>
+
+
+
+      <!--註解驗證-->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-validation</artifactId>
+        <version>3.1.2</version>
+      </dependency>
+
+
+      <!-- OkHttp -->
+      <dependency>
+        <groupId>com.squareup.okhttp3</groupId>
+        <artifactId>okhttp</artifactId>
+        <version>3.8.1</version>
+      </dependency>
+      <!-- 序列化方式 搭配OkHttp-->
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>2.8.6</version>
+      </dependency>
+
+
+     <!--  StringUtil    -->
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>3.12.0</version>
+      </dependency>
+
 
     </dependencies>
   </dependencyManagement>
