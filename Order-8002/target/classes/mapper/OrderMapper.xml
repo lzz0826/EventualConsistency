@@ -64,4 +64,28 @@
     SELECT * FROM t_order;
   </select>
 
+
+
+  <insert id="addOrderRepId" parameterType="org.example.entities.Order" useGeneratedKeys="true" keyProperty="id">
+    insert into t_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stock_id != null">stock_id,</if>
+      <if test="price != null">price,</if>
+      <if test="type != null">type,</if>
+      <if test="status != null">status,</if>
+      <if test="update_time != null">update_time,</if>
+      <if test="create_time != null">create_time,</if>
+
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="stock_id != null">#{stock_id,jdbcType=BIGINT},</if>
+      <if test="price != null">#{price,jdbcType=DECIMAL,javaType=java.math.BigDecimal},</if>
+      <if test="type != null">#{type,jdbcType=INTEGER},</if>
+      <if test="status != null">#{status,jdbcType=INTEGER},</if>
+      <if test="update_time != null">#{update_time,jdbcType=TIMESTAMP},</if>
+      <if test="create_time != null">#{create_time,jdbcType=TIMESTAMP},</if>
+    </trim>
+  </insert>
+
 </mapper>

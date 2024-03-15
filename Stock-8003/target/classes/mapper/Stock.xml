@@ -63,6 +63,19 @@
     WHERE id = #{id}
   </update>
 
+
+  <update id="deductedQuantity" parameterType="org.example.entities.Stock">
+    UPDATE `t_stock`
+    <trim prefix='set' suffixOverrides=','>
+      <if test="deducted_quantity != null"> quantity = quantity - #{deducted_quantity},</if>
+      <if test="update_time != null"> update_time = update_time,</if>
+
+    </trim>
+    WHERE id = #{id}
+    AND quantity >= #{deducted_quantity}
+  </update>
+
+
   <select resultMap="BaseResultMap" id="findById" resultType="org.example.entities.Stock">
     SELECT * FROM t_stock Where id = #{id};
   </select>

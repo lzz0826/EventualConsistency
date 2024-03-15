@@ -9,6 +9,10 @@ public interface OrderDao {
 
   public boolean addOrder(Order order);
 
+  public Long addOrderRepId(Order order);
+
+
+
   public Order findById(Long id);
 
   public List<Order> findAll();

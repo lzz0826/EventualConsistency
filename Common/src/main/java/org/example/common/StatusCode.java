@@ -50,6 +50,8 @@ public enum StatusCode {
 
   CallBackProcessing(2004,"回調處理中"),
 
+  DeductedStockQuantityFail(2005,"扣庫存失敗"),
+
   /**
    * Stock 3000
    */

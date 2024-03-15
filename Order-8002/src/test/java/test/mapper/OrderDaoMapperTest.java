@@ -14,6 +14,30 @@ public class OrderDaoMapperTest extends BastTest {
   @Resource
   private OrderDao dao;
 
+  @Test
+  public void addOrderRepIdTest(){
+    Order build = Order.builder()
+        .stock_id(418861L)
+        .price(new BigDecimal(22232.3))
+        .type(1)
+        .status(1)
+        .update_time(new Date())
+        .create_time(new Date())
+        .build();
+
+    Long b = dao.addOrderRepId(build);
+
+    Long generatedId = build.getId();
+
+    Integer type = build.getType();
+
+    System.out.println(b);
+    //獲取返回的id
+    System.out.println(generatedId);
+    System.out.println(type);
+
+  }
+
 
   @Test
   public void testFindById(){

@@ -1,9 +1,9 @@
-org/example/dao/TestCglibDao.class
 org/example/service/impl/DeptServiceImpl.class
 org/example/config/RedisConfig.class
 org/example/service/DeptService.class
-org/example/service/impl/DeptServiceImpl$1.class
 org/example/dao/DeptDao.class
-org/example/controller/DeptController.class
 org/example/factory/ProxyFactory.class
+org/example/dao/TestCglibDao.class
+org/example/service/impl/DeptServiceImpl$1.class
+org/example/controller/DeptController.class
 org/example/Dept_8001.class
