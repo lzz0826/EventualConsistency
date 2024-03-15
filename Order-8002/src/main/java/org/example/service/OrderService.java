@@ -15,10 +15,12 @@ import org.example.dao.OrderStockMiddleDao;
 import org.example.entities.Order;
 import org.example.entities.Stock;
 import org.example.entities.middle.OrderStockMiddle;
+import org.example.enums.OrderStatusEnum;
 import org.example.exception.AddOrderException;
 import org.example.exception.AddOrderStockMiddleException;
 import org.example.exception.DeductedStockQuantityException;
 import org.example.exception.NoStockException;
+import org.example.exception.NotFoundOrderException;
 import org.example.exception.OkHttpGetException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -67,7 +69,7 @@ public class OrderService {
         .stock_id(stock.getId())
         .price(stock.getPrice().multiply(BigDecimal.valueOf(quantity)))
         .type(1)
-        .status(1)
+        .status(OrderStatusEnum.CreateIng.code)
         .create_time(new Date())
         .update_time(new Date())
         .build();
@@ -98,6 +100,28 @@ public class OrderService {
       throw new AddOrderStockMiddleException();
     }
     return true;
+  }
+
+
+  //TODO
+  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ , rollbackFor = Exception.class)
+  public void updateOrderStatus(Long orderId, int orderStatus) throws NotFoundOrderException {
+
+    Order order = orderDao.findById(orderId);
+    if(order == null){
+      throw new NotFoundOrderException();
+    }
+
+//    orderStockMiddleDao.findById();
+
+    if(orderStatus != OrderStatusEnum.CreateIng.code){
+
+    }
+
+
+
+
+
   }
 
 

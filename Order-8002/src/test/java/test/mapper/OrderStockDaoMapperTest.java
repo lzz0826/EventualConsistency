@@ -1,5 +1,6 @@
 package test.mapper;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
@@ -12,6 +13,32 @@ public class OrderStockDaoMapperTest extends BastTest {
 
   @Resource
   private OrderStockMiddleDao dao;
+
+
+  @Test
+  public void findOrderIdTest(){
+
+    List<OrderStockMiddle> orderId = dao.findOrderId(24L);
+    for (OrderStockMiddle orderStockMiddle : orderId) {
+      System.out.println(orderStockMiddle);
+    }
+  }
+
+
+  @Test
+  public void findByIdsTest(){
+
+    List<Long> lists = new ArrayList<>();
+    lists.add(1L);
+    lists.add(2L);
+    lists.add(3L);
+    lists.add(4L);
+
+    List<OrderStockMiddle> byIds = dao.findByIds(lists);
+    for (OrderStockMiddle byId : byIds) {
+      System.out.println(byId);
+    }
+  }
 
   @Test
   public void findAllTest(){

@@ -32,19 +32,15 @@ public class OrderController {
   @PostMapping("/createOrder")
   public BaseResp<String> createOrder(@RequestBody @Valid CreateOrderReq req)
       throws OkHttpGetException, NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
-    String product_name = req.getProduct_name();
 
     boolean order = orderService.createOrder(req.getProduct_name(),req.getQuantity());
 
     if(order){
       return BaseResp.ok("成功");
     }
-
-
     return BaseResp.ok("失敗");
 
   }
-
 
   @GetMapping("/getAllOrderList")
   public BaseResp<List<Order>> getAllOrderList(){

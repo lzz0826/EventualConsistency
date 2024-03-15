@@ -48,6 +48,22 @@
     SELECT * FROM t_order_stock;
   </select>
 
+
+
+  <select id="findByIds" resultType="org.example.entities.middle.OrderStockMiddle">
+    SELECT *
+    FROM t_order_stock
+    WHERE id IN
+    <foreach collection="ids" item="ids" open="(" separator="," close=")">
+      #{ids}
+    </foreach>
+  </select>
+
+  <select id="findOrderId" resultType="org.example.entities.middle.OrderStockMiddle">
+    SELECT * FROM t_order_stock Where order_id = #{order_id};
+  </select>
+
+
   <update id="updateOrderStockMiddle" parameterType="org.example.entities.middle.OrderStockMiddle">
     UPDATE `t_order_stock`
     <trim prefix='set' suffixOverrides=','>
