@@ -1,4 +1,4 @@
-package test;
+package test.mapper;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -7,11 +7,13 @@ import javax.annotation.Resource;
 import org.example.dao.OrderDao;
 import org.example.entities.Order;
 import org.junit.Test;
+import test.BastTest;
 
-public class MapperTest extends BastTest{
+public class OrderDaoMapperTest extends BastTest {
 
   @Resource
   private OrderDao dao;
+
 
   @Test
   public void testFindById(){

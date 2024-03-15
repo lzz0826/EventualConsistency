@@ -1,4 +1,4 @@
-package org.example.entities;
+package org.example.entities.middle;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,25 +15,22 @@ import lombok.experimental.Accessors;
 @ToString
 @Accessors(chain = true)//鏈式風格訪問
 @Builder
-public class Stock {
+public class OrderStockMiddle {
 
   private Long id;
 
-  private Long product_id;
+  private Long order_id;
 
-  private String product_name;
+  private Long stock_id;
 
-  private BigDecimal price;
-
-  private Integer type;
+  private Integer deducted_quantity;
 
   private Integer status;
-
-  private Integer quantity;
 
   private Date update_time;
 
   private Date create_time;
+
 
 
 }

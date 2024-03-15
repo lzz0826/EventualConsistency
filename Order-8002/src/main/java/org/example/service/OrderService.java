@@ -15,8 +15,7 @@ import org.example.entities.Stock;
 import org.example.exception.NoStockException;
 import org.example.exception.OkHttpGetException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Service
 public class OrderService {
@@ -31,11 +30,7 @@ public class OrderService {
   public boolean createOrder(String product_name) throws OkHttpGetException, NoStockException {
 
     BaseResp<Stock> stockByProductName = stockClientService.getStockByProductName(product_name);
-
     Stock stock = RepStock(stockByProductName);
-    System.out.println(stock);
-    System.out.println(stock);
-    System.out.println(stock);
 
     if(stock == null){
       throw new NoStockException();
@@ -43,6 +38,7 @@ public class OrderService {
 
     Order order = Order
         .builder()
+        .stock_id(stock.getId())
         .create_time(new Date())
         .update_time(new Date())
         .build();

@@ -29,7 +29,6 @@ public class OrderController {
   @PostMapping("/createOrder")
   public BaseResp<String> createOrder(@RequestBody @Valid CreateOrderReq req)
       throws OkHttpGetException, NoStockException {
-//TODO
     String product_name = req.getProduct_name();
 
     boolean order = orderService.createOrder(req.getProduct_name());

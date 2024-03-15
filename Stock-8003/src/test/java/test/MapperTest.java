@@ -35,10 +35,11 @@ public class MapperTest extends BastTest{
 
     Stock build = Stock.builder()
         .product_id(1L)
-        .product_name("大大")
+        .product_name("大大小")
         .price(new BigDecimal(234.12))
         .type(1)
         .status(1)
+        .quantity(100)
         .update_time(new Date())
         .create_time(new Date())
         .build();
