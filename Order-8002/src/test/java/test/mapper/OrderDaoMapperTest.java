@@ -66,7 +66,7 @@ public class OrderDaoMapperTest extends BastTest {
         .create_time(new Date())
         .build();
     boolean b = dao.addOrder(build);
-    System.out.println(b);
+    System.out.println(build.getId());
   }
 
   @Test

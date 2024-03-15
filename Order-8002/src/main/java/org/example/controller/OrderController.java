@@ -9,6 +9,8 @@ import org.example.common.BaseResp;
 import org.example.controller.rep.CreateOrderReq;
 import org.example.entities.Order;
 import org.example.entities.Stock;
+import org.example.exception.AddOrderException;
+import org.example.exception.AddOrderStockMiddleException;
 import org.example.exception.DeductedStockQuantityException;
 import org.example.exception.NoStockException;
 import org.example.exception.OkHttpGetException;
@@ -29,13 +31,17 @@ public class OrderController {
 
   @PostMapping("/createOrder")
   public BaseResp<String> createOrder(@RequestBody @Valid CreateOrderReq req)
-      throws OkHttpGetException, NoStockException, DeductedStockQuantityException {
+      throws OkHttpGetException, NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
     String product_name = req.getProduct_name();
 
     boolean order = orderService.createOrder(req.getProduct_name(),req.getQuantity());
 
+    if(order){
+      return BaseResp.ok("成功");
+    }
 
-    return null;
+
+    return BaseResp.ok("失敗");
 
   }
 

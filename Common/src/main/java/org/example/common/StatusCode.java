@@ -49,8 +49,11 @@ public enum StatusCode {
   CreateOrderFail(2003,"新增訂單失敗"),
 
   CallBackProcessing(2004,"回調處理中"),
-
   DeductedStockQuantityFail(2005,"扣庫存失敗"),
+
+  AddOrderFail(2006,"添加DB AddOrder失敗"),
+
+  AddOrderStockMiddleFail(2006,"添加DB AddOrderStockMiddle失敗"),
 
   /**
    * Stock 3000

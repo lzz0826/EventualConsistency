@@ -11,8 +11,6 @@ public interface OrderDao {
 
   public Long addOrderRepId(Order order);
 
-
-
   public Order findById(Long id);
 
   public List<Order> findAll();
