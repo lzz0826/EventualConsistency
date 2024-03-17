@@ -27,7 +27,10 @@ public class OrderServiceTest extends BastTest {
     ids.add(20L);
     ids.add(21L);
 
+
     List<Order> list = orderService.updateOrderStatusToPayIng(ids);
+
+    System.out.println("最後返回:");
     for (Order order : list) {
       System.out.println(order);
     }
