@@ -14,6 +14,33 @@ public class OrderStockDaoMapperTest extends BastTest {
   @Resource
   private OrderStockMiddleDao dao;
 
+  @Test
+  public void findOrderIdsTest(){
+
+    List<Long> list = new ArrayList<>();
+    list.add(20L);
+    list.add(21L);
+    list.add(22L);
+    List<OrderStockMiddle> orderIds = dao.findOrderIds(list);
+    for (OrderStockMiddle orderId : orderIds) {
+      System.out.println(orderId);
+    }
+
+  }
+
+  @Test
+  public void updateOrderStatusByIdListTest(){
+
+
+    List<Long> list = new ArrayList<>();
+
+    list.add(20L);
+    list.add(21L);
+
+    int i = dao.updateOrderStatusByOrderIdList(4,list);
+    System.out.println(i);
+  }
+
 
   @Test
   public void findOrderIdTest(){

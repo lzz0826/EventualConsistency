@@ -63,6 +63,13 @@
     SELECT * FROM t_order_stock Where order_id = #{order_id};
   </select>
 
+  <select id="findOrderIds" resultType="org.example.entities.middle.OrderStockMiddle">
+    SELECT * FROM t_order_stock Where order_id IN
+    <foreach item="item" collection="orderIds" open="(" separator="," close=")">
+      #{item}
+    </foreach>
+  </select>
+
 
   <update id="updateOrderStockMiddle" parameterType="org.example.entities.middle.OrderStockMiddle">
     UPDATE `t_order_stock`
@@ -76,6 +83,14 @@
       <if test="update_time != null"> update_time = #{update_time},</if>
     </trim>
     WHERE id = #{id}
+  </update>
+
+
+  <update id="updateOrderStatusByOrderIdList" parameterType="java.util.List">
+    UPDATE `t_order_stock` SET status = #{status} WHERE order_id IN
+    <foreach item="item" collection="orderIds" open="(" separator="," close=")">
+      #{item}
+    </foreach>
   </update>
 
 </mapper>

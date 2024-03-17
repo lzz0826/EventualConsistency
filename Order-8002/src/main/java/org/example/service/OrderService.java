@@ -43,27 +43,27 @@ public class OrderService {
   @Resource
   private OrderStockMiddleDao orderStockMiddleDao;
 
-/**
-* 創建訂單
-*
-**/
-  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ , rollbackFor = Exception.class)
-  public boolean createOrder(String product_name , int quantity)
+  /**
+   * 創建訂單
+   **/
+  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+  public boolean createOrder(String product_name, int quantity)
       throws OkHttpGetException, NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
 
     BaseResp<Stock> stockByProductName = stockClientService.getStockByProductName(product_name);
     Stock stock = RepStock(stockByProductName);
 
-    if(stock == null){
+    if (stock == null) {
       throw new NoStockException();
     }
 
     Long id = stock.getId();
 
     //請求Stock服務 扣庫存 TODO 回滾只會在Order上 Stock 需要處理
-    boolean deductedStockQuantity = stockClientService.deductedStockQuantity(String.valueOf(id), String.valueOf(quantity));
+    boolean deductedStockQuantity = stockClientService.deductedStockQuantity(String.valueOf(id),
+        String.valueOf(quantity));
 
-    if(!deductedStockQuantity){
+    if (!deductedStockQuantity) {
 
       throw new DeductedStockQuantityException();
     }
@@ -81,7 +81,7 @@ public class OrderService {
 //    int sdf = 10/0;
 
     Long addOrder = orderDao.addOrderRepId(order);
-    if(addOrder == 0){
+    if (addOrder == 0) {
       log.error(StatusCode.AddOrderFail.msg);
       throw new AddOrderException();
     }
@@ -98,7 +98,7 @@ public class OrderService {
 
     boolean addOrderStockMiddle = orderStockMiddleDao.addOrderStockMiddle(orderStockMiddle);
 
-    if(!addOrderStockMiddle){
+    if (!addOrderStockMiddle) {
       log.error(StatusCode.AddOrderStockMiddleFail.msg);
       throw new AddOrderStockMiddleException();
     }
@@ -106,61 +106,67 @@ public class OrderService {
   }
 
 
-
   /**
-   * 更新訂單狀態(訂單 和 訂單中間表)
-   *
+   * 更新訂單狀態 CreateIng -> PayIng (訂單 和 訂單中間表)
+   * 更新多筆訂單 包含中間表 和訂單表 多對多
    **/
-  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ , rollbackFor = Exception.class)
-  public void updateOrderStatus(List<Long> orderIds, OrderStatusEnum orderStatusEnum) throws NotFoundOrderException {
-
+  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+  public List<Order> updateOrderStatusToPayIng(List<Long> orderIds)
+      throws NotFoundOrderException {
     //確定有更新的訂單
     List<Long> updateOrderIds = new ArrayList<>();
 
     //重中間表拿到所有訂單
-    List<OrderStockMiddle> orderStockMiddles = orderStockMiddleDao.findByIds(orderIds);
+    List<OrderStockMiddle> orderStockMiddles = orderStockMiddleDao.findOrderIds(orderIds);
 
-    if(orderStockMiddles.size() == 0){
+
+    if (orderStockMiddles.size() == 0) {
       throw new NotFoundOrderException();
     }
 
     //修改每單筆訂單
     for (OrderStockMiddle orderStockMiddle : orderStockMiddles) {
       Order order = orderDao.findById(orderStockMiddle.getOrder_id());
-      if(order == null){
+      if (order == null) {
         throw new NotFoundOrderException();
       }
 
+
       //把 CreateIng 訂單改成 PayIng 中間狀態
-      if(orderStatusEnum != OrderStatusEnum.CreateIng){
+      if (order.getStatus() == OrderStatusEnum.CreateIng.code) {
         Order build = Order.builder().build();
+        build.setId(order.getId());
         build.setStatus(OrderStatusEnum.PayIng.code);
         updateOrder(build);
 
         updateOrderIds.add(orderStockMiddle.getOrder_id());
-
-        //TODO
-
+      }else {
+        break;
       }
 
+      //更新中間表狀態
+      orderStockMiddleDao.updateOrderStatusByOrderIdList(OrderStatusEnum.PayIng.code,
+          updateOrderIds);
     }
 
+    List<Order> orderList = getOrderList(updateOrderIds);
+    return orderList;
+  }
 
+  //根據中間表查詢OrderList
+  public List<Order> getOrderList(List<Long> middleOrderIds) {
 
-
-
-
-
-
-
-
-
+    List<Order> list = new ArrayList<>();
+    for (Long orderId : middleOrderIds) {
+      Order order = getOrderById(orderId);
+      list.add(order);
+    }
+    return list;
   }
 
 
-
   //取得所有訂單
-  public List<Order> getAllOrderList(){
+  public List<Order> getAllOrderList() {
 
     List<Order> orderList = orderDao.findAll();
 
@@ -170,17 +176,27 @@ public class OrderService {
 
 
   //新增訂單
-  public boolean addOrder(Order order){
+  public boolean addOrder(Order order) {
     boolean b = orderDao.addOrder(order);
     return b;
   }
 
   //更新訂單
-  public void updateOrder(Order order){
+  public int updateOrder(Order order) {
     order.setUpdate_time(new Date());
-    orderDao.updateOrder(order);
+    return orderDao.updateOrder(order);
   }
 
 
+  //查詢訂單 id
+  public Order getOrderById(Long id) {
+
+    Order order = orderDao.findById(id);
+
+    if (order != null) {
+      return order;
+    }
+    return null;
+  }
 
 }

@@ -14,6 +14,7 @@ public class OrderDaoMapperTest extends BastTest {
   @Resource
   private OrderDao dao;
 
+
   @Test
   public void addOrderRepIdTest(){
     Order build = Order.builder()
@@ -70,7 +71,7 @@ public class OrderDaoMapperTest extends BastTest {
   @Test
   public void testUpdateOrder(){
     Order build = Order.builder()
-        .id(1L)
+        .id(21L)
         .price(new BigDecimal(2332.3))
         .type(0)
         .status(0)
