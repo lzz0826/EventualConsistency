@@ -142,11 +142,15 @@ public class OrderService {
       }else {
         break;
       }
+    }
 
+    if(!updateOrderIds.isEmpty()){
       //更新中間表狀態
       orderStockMiddleDao.updateOrderStatusByOrderIdList(OrderStatusEnum.PayIng.code,
           updateOrderIds);
+
     }
+
 
     List<Order> orderList = getOrderList(updateOrderIds);
     return orderList;
