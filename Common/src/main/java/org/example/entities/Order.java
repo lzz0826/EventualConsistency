@@ -19,8 +19,6 @@ public class Order {
 
   private Long id;
 
-  private Long stock_id;
-
   private BigDecimal price;
 
   private Integer type;

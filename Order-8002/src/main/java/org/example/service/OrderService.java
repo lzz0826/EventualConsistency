@@ -3,6 +3,7 @@ package org.example.service;
 import static org.example.client.service.StockClientService.RepStock;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
@@ -42,7 +43,10 @@ public class OrderService {
   @Resource
   private OrderStockMiddleDao orderStockMiddleDao;
 
-
+/**
+* 創建訂單
+*
+**/
   @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ , rollbackFor = Exception.class)
   public boolean createOrder(String product_name , int quantity)
       throws OkHttpGetException, NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
@@ -66,7 +70,6 @@ public class OrderService {
 
     Order order = Order
         .builder()
-        .stock_id(stock.getId())
         .price(stock.getPrice().multiply(BigDecimal.valueOf(quantity)))
         .type(1)
         .status(OrderStatusEnum.CreateIng.code)
@@ -103,20 +106,50 @@ public class OrderService {
   }
 
 
-  //TODO
-  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ , rollbackFor = Exception.class)
-  public void updateOrderStatus(Long orderId, int orderStatus) throws NotFoundOrderException {
 
-    Order order = orderDao.findById(orderId);
-    if(order == null){
+  /**
+   * 更新訂單狀態(訂單 和 訂單中間表)
+   *
+   **/
+  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ , rollbackFor = Exception.class)
+  public void updateOrderStatus(List<Long> orderIds, OrderStatusEnum orderStatusEnum) throws NotFoundOrderException {
+
+    //確定有更新的訂單
+    List<Long> updateOrderIds = new ArrayList<>();
+
+    //重中間表拿到所有訂單
+    List<OrderStockMiddle> orderStockMiddles = orderStockMiddleDao.findByIds(orderIds);
+
+    if(orderStockMiddles.size() == 0){
       throw new NotFoundOrderException();
     }
 
-//    orderStockMiddleDao.findById();
+    //修改每單筆訂單
+    for (OrderStockMiddle orderStockMiddle : orderStockMiddles) {
+      Order order = orderDao.findById(orderStockMiddle.getOrder_id());
+      if(order == null){
+        throw new NotFoundOrderException();
+      }
 
-    if(orderStatus != OrderStatusEnum.CreateIng.code){
+      //把 CreateIng 訂單改成 PayIng 中間狀態
+      if(orderStatusEnum != OrderStatusEnum.CreateIng){
+        Order build = Order.builder().build();
+        build.setStatus(OrderStatusEnum.PayIng.code);
+        updateOrder(build);
+
+        updateOrderIds.add(orderStockMiddle.getOrder_id());
+
+        //TODO
+
+      }
 
     }
+
+
+
+
+
+
 
 
 
@@ -126,6 +159,7 @@ public class OrderService {
 
 
 
+  //取得所有訂單
   public List<Order> getAllOrderList(){
 
     List<Order> orderList = orderDao.findAll();
@@ -135,9 +169,16 @@ public class OrderService {
   }
 
 
+  //新增訂單
   public boolean addOrder(Order order){
     boolean b = orderDao.addOrder(order);
     return b;
+  }
+
+  //更新訂單
+  public void updateOrder(Order order){
+    order.setUpdate_time(new Date());
+    orderDao.updateOrder(order);
   }
 
 
