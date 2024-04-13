@@ -1,0 +1,21 @@
+version: '3.7'
+
+networks:
+  redis-cluster-net:
+    external:
+      name: redis-cluster-net
+
+services:
+  seata-server:
+    image: seataio/seata-server:1.7.1
+    container_name: seata-server
+    ports:
+      - "8091:8091"
+    environment:
+      - SEATA_PORT=8091
+      - STORE_MODE=file
+
+    networks:
+      redis-cluster-net:
+        ipv4_address: 192.168.200.98
+

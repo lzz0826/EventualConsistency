@@ -1,9 +1,9 @@
 package test;
 
+import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.Resource;
 import org.example.dao.StockDao;
 import org.example.entities.Stock;
 import org.junit.Test;

@@ -1,12 +1,10 @@
 package test;
 
+import jakarta.annotation.Resource;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import javax.annotation.Resource;
 import org.junit.Test;
 import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
 
 public class RedisTest extends BastTest {
 

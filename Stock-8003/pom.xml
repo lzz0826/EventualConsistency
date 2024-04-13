@@ -18,12 +18,6 @@
     </dependency>
 
 
-    <!-- JUnit 測試框架依賴 -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-
     <!-- MySQL 連接驅動依賴 -->
     <dependency>
       <groupId>mysql</groupId>
@@ -76,7 +70,11 @@
       <artifactId>spring-boot-starter-cache</artifactId>
     </dependency>
 
-
+   <!-- seata 分布式事務 -->
+<!--    <dependency>-->
+<!--      <groupId>com.alibaba.cloud</groupId>-->
+<!--      <artifactId>spring-cloud-starter-alibaba-seata</artifactId>-->
+<!--    </dependency>-->
 
 
     <!-- mybatis 依賴 -->
@@ -92,19 +90,17 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-    <!-- Spring Boot 測試 Starter 依賴 -->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-    </dependency>
+<!--    &lt;!&ndash; Spring Boot 測試 Starter 依賴 &ndash;&gt;-->
+<!--    <dependency>-->
+<!--      <groupId>org.springframework.boot</groupId>-->
+<!--      <artifactId>spring-boot-starter-test</artifactId>-->
+<!--    </dependency>-->
 
     <!-- json 轉換器 -->
     <dependency>
       <groupId>com.alibaba</groupId>
       <artifactId>fastjson</artifactId>
     </dependency>
-
-
 
 
     <!--註解驗證-->
@@ -117,6 +113,23 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
+    </dependency>
+
+    <!--  測試   -->
+    <!-- JUnit 測試框架依賴 -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-test</artifactId>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>

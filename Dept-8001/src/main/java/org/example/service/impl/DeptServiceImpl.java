@@ -3,16 +3,17 @@ package org.example.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Resource;
 import org.example.entities.Dept;
 import org.example.enums.RedisKeyEnum;
 import org.example.service.RedissonService;
 import org.example.utils.RandomUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
@@ -27,11 +28,11 @@ public class DeptServiceImpl implements DeptService {
   @Resource
   private RedisTemplate<String,String> redisTemplate;
 
-  @Resource
+//  @Resource
   private RedissonService redissonService;
 
 
-  @Resource
+  @Autowired
   private DeptDao dao;
 
   @Override

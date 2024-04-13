@@ -1,7 +1,7 @@
 package org.example.service;
 
+import jakarta.annotation.Resource;
 import java.util.List;
-import javax.annotation.Resource;
 import org.example.entities.Dept;
 import org.example.service.impl.DeptServiceImpl;
 import org.springframework.cache.annotation.CacheEvict;

@@ -1,6 +1,6 @@
 package org.example.client.controller;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import lombok.extern.log4j.Log4j2;
 import org.example.client.service.StockClientService;
 import org.example.common.BaseResp;

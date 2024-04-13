@@ -1,10 +1,9 @@
 package test.service;
 
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Resource;
 import org.example.entities.Order;
-import org.example.enums.OrderStatusEnum;
 import org.example.exception.AddOrderException;
 import org.example.exception.AddOrderStockMiddleException;
 import org.example.exception.DeductedStockQuantityException;

@@ -3,7 +3,7 @@ package org.example;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-
+//TODO 沒有配置Nacos報的錯 service.vgroupMapping.default_tx_group configuration item is required
 //開啟緩存管理 移至SpringCacheConfig
 //@EnableCaching
 @SpringBootApplication()

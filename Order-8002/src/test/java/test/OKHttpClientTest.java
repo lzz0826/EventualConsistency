@@ -1,6 +1,6 @@
 package test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import org.example.client.service.StockClientService;
 import org.example.common.BaseResp;
 import org.example.entities.Stock;

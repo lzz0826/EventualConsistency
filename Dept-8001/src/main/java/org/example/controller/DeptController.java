@@ -1,8 +1,8 @@
 package org.example.controller;
 
 
+import jakarta.annotation.Resource;
 import java.util.List;
-import javax.annotation.Resource;
 import org.example.entities.Dept;
 import org.example.enums.RedisKeyEnum;
 import org.example.service.RedissonService;
@@ -68,7 +68,7 @@ public class DeptController {
   // Redis分布式鎖 範例
   // *//
 
-  //一般Redis分布式鎖
+//  一般Redis分布式鎖
   @GetMapping("/dept/getCashByList")
   public List<Dept> getCashByList(){
     return deptService.getCashByList();

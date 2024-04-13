@@ -1,7 +1,7 @@
 package org.example.service;
 
+import jakarta.annotation.Resource;
 import java.util.Date;
-import javax.annotation.Resource;
 import org.example.dao.StockDao;
 import org.example.entities.Stock;
 import org.example.exception.NoStockException;

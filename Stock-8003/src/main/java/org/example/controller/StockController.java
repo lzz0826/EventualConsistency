@@ -1,9 +1,8 @@
 package org.example.controller;
 
 
-import javax.annotation.Resource;
-import javax.validation.Valid;
-import org.apache.commons.lang3.StringUtils;
+import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.example.common.BaseResp;
 import org.example.common.StatusCode;
 import org.example.controller.req.DeductedStockQuantityReq;
@@ -56,6 +55,7 @@ public class StockController {
   /**
    * 扣庫存 檢查庫存後 在更新(在同一段 sql執行確保原子性)
    */
+  //Seata 分布式事務測試 @GlobalTransactional
   @PostMapping("/deductedStockQuantity")
   public BaseResp<String> deductedStockQuantity(@RequestBody @Valid DeductedStockQuantityReq req)
       throws UpdateStockException, NoStockException {

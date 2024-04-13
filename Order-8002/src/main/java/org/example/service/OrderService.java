@@ -2,11 +2,12 @@ package org.example.service;
 
 import static org.example.client.service.StockClientService.RepStock;
 
+import io.seata.spring.annotation.GlobalTransactional;
+import jakarta.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.Resource;
 import lombok.extern.log4j.Log4j2;
 import org.example.client.service.StockClientService;
 import org.example.common.BaseResp;
@@ -29,8 +30,8 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 
-@Service
 @Log4j2
+@Service
 public class OrderService {
 
 
@@ -46,6 +47,10 @@ public class OrderService {
   /**
    * 創建訂單
    **/
+
+  // Transactional 第一入口加上GlobalTransactional 補償任務 Seata 會做
+  // 原本的 @Transactional還是要加上
+  @GlobalTransactional
   @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
   public boolean createOrder(String product_name, int quantity)
       throws OkHttpGetException, NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
@@ -59,7 +64,8 @@ public class OrderService {
 
     Long id = stock.getId();
 
-    //請求Stock服務 扣庫存 TODO 回滾只會在Order上 Stock 需要處理
+    //請求Stock服務 扣庫存 回滾只會在Order上 Stock 需要處理
+    //加上GlobalTransactional 分布式事務
     boolean deductedStockQuantity = stockClientService.deductedStockQuantity(String.valueOf(id),
         String.valueOf(quantity));
 
@@ -77,8 +83,8 @@ public class OrderService {
         .update_time(new Date())
         .build();
 
-    //TODO 這邊報異常 Order會回滾 但是Stock服務 不會
-//    int sdf = 10/0;
+    //*如果沒有分布式事務 這邊報異常 Order會回滾(沒有天價訂單) 但是Stock服務(庫存一樣會扣) 不會
+    int sdf = 10/0;
 
     Long addOrder = orderDao.addOrderRepId(order);
     if (addOrder == 0) {

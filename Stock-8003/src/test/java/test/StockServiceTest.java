@@ -1,6 +1,6 @@
 package test;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import org.example.exception.NoStockException;
 import org.example.service.StockService;
 import org.junit.Test;

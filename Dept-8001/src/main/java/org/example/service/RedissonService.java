@@ -6,11 +6,11 @@ import static org.example.enums.RedisKeyEnum.RedissonLockList;
 import static org.example.enums.RedisKeyEnum.RedissonWriteLock;
 
 import com.alibaba.fastjson.JSON;
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Resource;
 import org.example.entities.Dept;
 import org.example.utils.RandomUtil;
 import org.redisson.api.RCountDownLatch;

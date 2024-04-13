@@ -1,9 +1,9 @@
 package test.mapper;
 
+import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.annotation.Resource;
 import org.example.dao.OrderStockMiddleDao;
 import org.example.entities.middle.OrderStockMiddle;
 import org.junit.Test;

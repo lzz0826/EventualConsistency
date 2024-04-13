@@ -1,13 +1,13 @@
 package test;
 
-import javax.annotation.Resource;
 import org.example.dao.DeptDao;
 import org.example.entities.Dept;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MapperTest extends BastTest{
 
-  @Resource
+  @Autowired
   private DeptDao dao;
 
   @Test
