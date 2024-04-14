@@ -1,3 +1,4 @@
+name: order-service
 server:
   port: 8002
   servlet:
@@ -31,7 +32,7 @@ spring:
         max-wait: 1
 
   application:
-    name: Dept #服務名*服務註冊與發現時使用 如果是多台會共用名
+    name: order-service #服務名*服務註冊與發現時使用 如果是多台會共用名
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -48,6 +49,10 @@ mybatis:
 
 
 
-
+seata:
+  # 应用程序 ID，用于标识唯一的应用程序
+  application-id: order-service
+  # 事务组 ID，用于标识唯一的事务组
+  tx-service-group: my_test_tx_group
 
 

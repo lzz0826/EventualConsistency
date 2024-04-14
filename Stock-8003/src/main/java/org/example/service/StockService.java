@@ -1,7 +1,9 @@
 package org.example.service;
 
+import io.seata.core.context.RootContext;
 import jakarta.annotation.Resource;
 import java.util.Date;
+import lombok.extern.log4j.Log4j2;
 import org.example.dao.StockDao;
 import org.example.entities.Stock;
 import org.example.exception.NoStockException;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Log4j2
 public class StockService {
 
   @Resource
@@ -46,6 +49,10 @@ public class StockService {
   @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ , rollbackFor = Exception.class)
   public boolean deductedStockQuantity(Long id , int quantity)
       throws NoStockException {
+
+    //TODO Seata全局事务id=================>null 待處理
+    log.info("Seata全局事务id=================>{}", RootContext.getXID());
+
 
     Stock byId = dao.findById(id);
 

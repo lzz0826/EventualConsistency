@@ -1,3 +1,4 @@
+name: stock-service
 server:
   port: 8003
   servlet:
@@ -31,7 +32,7 @@ spring:
         max-wait: 1
 
   application:
-    name: Dept #服務名*服務註冊與發現時使用 如果是多台會共用名
+    name: stock-service #服務名*服務註冊與發現時使用 如果是多台會共用名
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -47,5 +48,7 @@ mybatis:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl #開啟SQL語句打印
 
 
-
+seata:
+  application-id: stock-service
+  tx-service-group: my_test_tx_group
 

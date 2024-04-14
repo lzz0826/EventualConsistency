@@ -34,7 +34,7 @@ public class OrderController {
 
 
   //Seata 分布式事務測試 @GlobalTransactional(目前是直連 沒有搭配服務註冊)
-  //需要在 每個要分布式事務 創建 Seata表
+  //需要在 每個要分布式事務服務 DB創建 Seata表 和resources下添加 file.conf.registry.conf (需要看使用哪個ROM)
   //Seata1.7.1 版本問題待解決(至少要java11) 需要升級spring boot 3.0 或是 降版Seata1.5.2
   @PostMapping("/createOrder")
   public BaseResp<String> createOrder(@RequestBody @Valid CreateOrderReq req)

@@ -2,6 +2,7 @@ package org.example.service;
 
 import static org.example.client.service.StockClientService.RepStock;
 
+import io.seata.core.context.RootContext;
 import io.seata.spring.annotation.GlobalTransactional;
 import jakarta.annotation.Resource;
 import java.math.BigDecimal;
@@ -54,6 +55,8 @@ public class OrderService {
   @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
   public boolean createOrder(String product_name, int quantity)
       throws OkHttpGetException, NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
+
+    log.info("Seata全局事务id=================>{}", RootContext.getXID());
 
     BaseResp<Stock> stockByProductName = stockClientService.getStockByProductName(product_name);
     Stock stock = RepStock(stockByProductName);
