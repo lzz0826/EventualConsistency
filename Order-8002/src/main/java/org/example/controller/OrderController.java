@@ -25,11 +25,8 @@ public class OrderController {
 
 
 
-  @Autowired
-  private OrderService orderService;
-
   @Resource
-  private StockClientService stockClientService;
+  private OrderService orderService;
 
 
 

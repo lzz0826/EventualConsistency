@@ -58,7 +58,7 @@ public class StockController {
   //Seata 分布式事務測試 @GlobalTransactional
   @PostMapping("/deductedStockQuantity")
   public BaseResp<String> deductedStockQuantity(@RequestBody @Valid DeductedStockQuantityReq req)
-      throws UpdateStockException, NoStockException {
+      throws NoStockException {
 
     boolean b = stockService.deductedStockQuantity(req.getId(), req.getQuantity());
 

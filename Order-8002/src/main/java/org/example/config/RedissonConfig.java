@@ -1,7 +1,6 @@
 package org.example.config;
 
 
-import java.io.IOException;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.config.Config;
@@ -28,7 +27,7 @@ public class RedissonConfig {
 
   //所有對Redisson的使用都是通過 RedissonClient
   @Bean(destroyMethod = "shutdown")
-  public RedissonClient redisson() throws IOException {
+  public RedissonClient redisson() {
     //1.創建配置
     Config config = new Config();
     String address = "redis://" + redisHost + ":" + redisPort;

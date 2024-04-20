@@ -4,6 +4,7 @@ package org.example.client.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import io.seata.core.context.RootContext;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -22,11 +23,11 @@ import org.springframework.stereotype.Service;
 @Log4j2
 public class StockClientService {
 
-
   //--------- Stock 服務
   public BaseResp<Stock> getStockById(Long id) throws OkHttpGetException {
     String url = ServiceUrlEnum.Stock.getServiceUrl(ServiceUrlEnum.Stock.name)+"getStockById/"+id;;
     Map<String, String> header = new HashMap<>();
+    CheckOutXid(header);
     String rep = OkHttpUtil.get(url, header);
     //使用TypeReference<>{} 隱式函數轉換
     BaseResp<Stock> baseResp = JSON.parseObject(rep, new TypeReference<BaseResp<Stock>>() {});
@@ -36,6 +37,7 @@ public class StockClientService {
   public BaseResp<Stock> getStockByProductName(String productName) throws OkHttpGetException {
     String url = ServiceUrlEnum.Stock.getServiceUrl(ServiceUrlEnum.Stock.name)+"getStockByProductName/"+productName;;
     Map<String, String> header = new HashMap<>();
+    CheckOutXid(header);
     String rep = OkHttpUtil.get(url, header);
     //使用TypeReference<>{} 隱式函數轉換
     BaseResp<Stock> baseResp = JSON.parseObject(rep, new TypeReference<BaseResp<Stock>>() {});
@@ -46,14 +48,17 @@ public class StockClientService {
   public boolean deductedStockQuantity(String id, String  quantity) throws NoStockException {
     String url = ServiceUrlEnum.Stock.getServiceUrl(ServiceUrlEnum.Stock.name)+"deductedStockQuantity";
     Map<String, String> params = new HashMap<>();
+    Map<String, String> headers = new HashMap<>();
+    CheckOutXid(headers);
     params.put("id",id);
     params.put("quantity",quantity);
+
 
     Integer statusCode;
     String data;
 
     try {
-      String rep = OkHttpUtil.post(url,null, JSON.toJSONString(params));
+      String rep = OkHttpUtil.post(url,headers, JSON.toJSONString(params));
       statusCode = (Integer) JSON.parseObject(rep).get("statusCode");;
       data =  (String) JSON.parseObject(rep).get("data");
     }catch (Exception e){
@@ -79,6 +84,20 @@ public class StockClientService {
       return baseResp.getData();
     }
     return null;
+  }
+
+  /**
+   * (請求方) : 確認Seata分布式事務ID **因使用OKHTTP需要自行添加Header
+   * (被請求方) : 需要使用全局攔截器來接收Xid
+   * OkHttp 不自动集成 Seata 的事务传播机制。Seata 通常与 Spring Cloud 集成时，依赖于 Spring Cloud 的通信机制
+   * （如 Feign、Ribbon 等）来自动传递 XID。使用 OkHttp 的话，需要手动将 XID 从事务发起方传到被调用方。
+   */
+  public static Map<String,String> CheckOutXid(Map<String,String> headers){
+    String xid = RootContext.getXID();
+    if(xid != null){
+      headers.put("XID",xid);
+    }
+    return headers;
   }
 
 

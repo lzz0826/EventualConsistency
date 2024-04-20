@@ -86,7 +86,7 @@ public class OrderService {
         .update_time(new Date())
         .build();
 
-    //*如果沒有分布式事務 這邊報異常 Order會回滾(沒有天價訂單) 但是Stock服務(庫存一樣會扣) 不會
+    //*如果沒有分布式事務 這邊報異常 Order會回滾(沒有天價訂單) 但是Stock服務(庫存一樣會扣)
     int sdf = 10/0;
 
     Long addOrder = orderDao.addOrderRepId(order);
