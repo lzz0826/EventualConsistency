@@ -83,7 +83,7 @@
   *   常規數據(讀多寫少 即時性,一致性要求不高的數據)完全可以使用Spring-Cache
   *   寫模式(只要緩存的數據有過期時間就足夠了)
   *   特殊數據:特殊設計
-  *
+  
   * 原理: CacheManger(RedisCacheManager) -> Cache(RedisCache) -> Cache負責緩存的讀寫
    
   * 配置為Redis:
