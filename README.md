@@ -85,12 +85,12 @@
   *   特殊數據:特殊設計
   *
   * 原理: CacheManger(RedisCacheManager) -> Cache(RedisCache) -> Cache負責緩存的讀寫
-  * 
+   
   * 配置為Redis:
   * spring:
   *  cache:
   *   type: redis
-  *
+  
   * @EnableCaching
 
 <br />
