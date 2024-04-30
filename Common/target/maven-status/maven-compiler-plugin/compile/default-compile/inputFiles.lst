@@ -1,8 +1,0 @@
-/Users/sai/IdeaProjects/EventualConsistency/Common/src/main/java/org/example/common/BaseResp.java
-/Users/sai/IdeaProjects/EventualConsistency/Common/src/main/java/org/example/common/StatusCode.java
-/Users/sai/IdeaProjects/EventualConsistency/Common/src/main/java/org/example/enums/ServiceUrlEnum.java
-/Users/sai/IdeaProjects/EventualConsistency/Common/src/main/java/org/example/entities/Order.java
-/Users/sai/IdeaProjects/EventualConsistency/Common/src/main/java/org/example/entities/middle/OrderStockMiddle.java
-/Users/sai/IdeaProjects/EventualConsistency/Common/src/main/java/org/example/entities/Stock.java
-/Users/sai/IdeaProjects/EventualConsistency/Common/src/main/java/org/example/entities/Dept.java
-/Users/sai/IdeaProjects/EventualConsistency/Common/src/main/java/org/example/exception/NoStockException.java

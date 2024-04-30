@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //TODO 沒有配置Nacos報的錯 service.vgroupMapping.default_tx_group configuration item is required
 //開啟緩存管理 移至SpringCacheConfig
 //@EnableCaching
+//--spring.config.location=file:/path/to/your/config.yml
 @SpringBootApplication()
 public class Order_8002 {
 
