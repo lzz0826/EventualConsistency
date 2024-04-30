@@ -31,6 +31,12 @@ spring:
         max-idle: 3
         max-wait: 1
 
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: user
+    password: 1234
+
   application:
     name: order-service #服務名*服務註冊與發現時使用 如果是多台會共用名
 
