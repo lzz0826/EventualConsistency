@@ -20,7 +20,7 @@ public class RabbitMqConfig {
      */
 
     //延遲隊列 (死信后会交给 orderReleaseOrderQueue)
-    private static final String Order_Delay_Queue_Name = "order.delay.queue" ;
+    public static final String Order_Delay_Queue_Name = "order.delay.queue" ;
     private static final int Order_Delay_Queue_Ttl = 60000;
     @Bean
     public Queue orderDelayQueue(){
@@ -44,7 +44,7 @@ public class RabbitMqConfig {
     }
 
     //訂單發布隊列
-    private static final String Order_Release_OrderQueue_Name = "order.release.order.queue" ;
+    public static final String Order_Release_OrderQueue_Name = "order.release.order.queue" ;
 
     @Bean
     public Queue orderReleaseOrderQueue(){
@@ -58,7 +58,7 @@ public class RabbitMqConfig {
     }
 
     //事件交换机
-    private static final String Order_Event_Exchange = "order-even-exchange" ;
+    public static final String Order_Event_Exchange = "order-even-exchange" ;
     @Bean
     public Exchange orderEventExchange(){
 //        String name, boolean durable, boolean autoDelete, Map<String, Object> arguments
@@ -66,7 +66,7 @@ public class RabbitMqConfig {
     }
 
     //創建訂單綁定
-    private static final String Order_Create_Order_Key = "order.create.order" ;
+    public static final String Order_Create_Order_Key = "order.create.order" ;
 
     @Bean
     public Binding orderCreateOrder(){
@@ -82,7 +82,7 @@ public class RabbitMqConfig {
     }
 
     //發布訂單綁定
-    private static final String Order_Release_Order_Key = "order.release.order" ;
+    public static final String Order_Release_Order_Key = "order.release.order" ;
 
     @Bean
     public Binding orderReleaseOrder(){

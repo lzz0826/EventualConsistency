@@ -1,5 +1,6 @@
 package org.example.entities;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.experimental.Accessors;
 @ToString
 @Accessors(chain = true)//鏈式風格訪問
 @Builder
-public class Order {
+public class Order implements Serializable {
 
   private Long id;
 

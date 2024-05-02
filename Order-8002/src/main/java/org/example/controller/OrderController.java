@@ -3,8 +3,10 @@ package org.example.controller;
 
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
-import org.example.client.service.StockClientService;
 import org.example.common.BaseResp;
 import org.example.controller.rep.CreateOrderReq;
 import org.example.entities.Order;
@@ -14,11 +16,14 @@ import org.example.exception.DeductedStockQuantityException;
 import org.example.exception.NoStockException;
 import org.example.exception.OkHttpGetException;
 import org.example.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import static org.example.config.RabbitMqConfig.Order_Create_Order_Key;
+import static org.example.config.RabbitMqConfig.Order_Event_Exchange;
 
 @RestController
 public class OrderController {
@@ -52,6 +57,25 @@ public class OrderController {
     List<Order> allOrderList = orderService.getAllOrderList();
 
     return BaseResp.ok(allOrderList);
+  }
+
+  @Resource
+  private RabbitTemplate rabbitTemplate;
+
+  @GetMapping("/testOrderMq")
+  private BaseResp<String> testOrderMq(){
+
+    Order build = Order.builder()
+            .id(99L)
+            .price(new BigDecimal(100))
+            .type(1)
+            .status(1)
+            .create_time(new Date())
+            .update_time(new Date())
+            .build();
+
+    rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Create_Order_Key,build);
+    return BaseResp.ok("成功");
   }
 
 
