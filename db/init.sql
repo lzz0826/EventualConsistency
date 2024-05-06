@@ -58,6 +58,23 @@ CREATE TABLE IF NOT EXISTS `t_stock` (
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='庫存表';
 
 
+CREATE TABLE IF NOT EXISTS `t_stock_undo_log` (
+    `id` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT COMMENT '操作紀錄id',
+    `stock_id` BIGINT NOT NULL COMMENT '庫存id',
+    `order_id` BIGINT DEFAULT NULL COMMENT '相關訂單id，如果有',
+    `operation_type` VARCHAR(20) NOT NULL COMMENT '操作類型：increase（增加庫存）、decrease（減少庫存)',
+    `quantity` INT NOT NULL COMMENT '操作數量',
+    `operation_time` TIMESTAMP NOT NULL COMMENT '操作時間',
+    `description` TEXT COMMENT '操作描述',
+    `status` INT DEFAULT 0 COMMENT '操作狀態：1-成功、-1-失敗、0-等待等',
+    `rollback_status` TINYINT(1) DEFAULT 0 COMMENT '回滾狀態：0-未回滾、1-已回滾',
+    `rollback_time` TIMESTAMP DEFAULT NULL COMMENT '回滾時間',
+    `update_time` TIMESTAMP NOT NULL,
+    `create_time` TIMESTAMP NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='庫存操作紀錄表';
+
+
+
 -- seata分布式事務紀錄表
 CREATE TABLE IF NOT EXISTS `undo_log`
 (

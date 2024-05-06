@@ -5,6 +5,8 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -12,6 +14,16 @@ import java.util.HashMap;
 
 @Configuration
 public class RabbitMqConfig {
+
+
+    /**
+     *  使用JSON序列化機制 進行消息轉換
+     */
+    @Bean
+    public MessageConverter messageConverter(){
+        return new Jackson2JsonMessageConverter();
+    }
+
 
     /**
      *  订单与库存

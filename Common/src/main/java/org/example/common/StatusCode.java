@@ -58,7 +58,9 @@ public enum StatusCode {
   /**
    * Stock 3000
    */
-  UpdateStockFail(3000,"更新訂單失敗"),
+  UpdateStockFail(3000,"更新庫存失敗"),
+
+  AddStockOnDoLogFail(3001,"添加庫存操作失敗"),
 
   StockServerError(3001,"Stock服務異常"),
 

@@ -73,7 +73,9 @@ public class OrderController {
             .create_time(new Date())
             .update_time(new Date())
             .build();
+    //TODO 創建訂單 狀態 代支付
 
+    //發送MQ延遲隊列 時間超過未支付改成 失敗
     rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Create_Order_Key,build);
     return BaseResp.ok("成功");
   }

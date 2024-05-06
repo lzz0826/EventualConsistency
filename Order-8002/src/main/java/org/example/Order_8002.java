@@ -1,5 +1,6 @@
 package org.example;
 
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -8,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 //開啟緩存管理 移至SpringCacheConfig
 //@EnableCaching
 //--spring.config.location=file:/path/to/your/config.yml
+@EnableRabbit
 @SpringBootApplication()
 public class Order_8002 {
 

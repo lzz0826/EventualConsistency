@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.dao.StockOnDoLogDao">
+  <resultMap id="BaseResultMap" type="org.example.entities.StockOnDoLog">
+    <id column="id" property="id" jdbcType="BIGINT"/>
+    <result column="stock_id" property="stock_id" jdbcType="BIGINT"/>
+    <result column="order_id" property="order_id" jdbcType="BIGINT"/>
+    <result property="operation_type" column="operation_type" jdbcType="VARCHAR"/>
+    <result property="quantity" column="quantity" jdbcType="INTEGER"/>
+    <result property="operation_time" column="operation_time" jdbcType="TIMESTAMP"/>
+    <result property="description" column="description" jdbcType="VARCHAR"/>
+    <result property="status" column="status" jdbcType="INTEGER"/>
+    <result property="rollback_status" column="rollback_status" jdbcType="INTEGER"/>
+    <result property="rollback_time" column="rollback_time" jdbcType="TIMESTAMP"/>
+    <result property="update_time" column="update_time" jdbcType="TIMESTAMP"/>
+    <result property="create_time" column="create_time" jdbcType="TIMESTAMP"/>
+  </resultMap>
+
+  <insert id="addStockOnDoLog" useGeneratedKeys="true" keyProperty="id" parameterType="org.example.entities.StockOnDoLog">
+    insert into t_stock_undo_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">id,</if>
+      <if test="stock_id != null">stock_id,</if>
+      <if test="order_id != null">order_id,</if>
+      <if test="operation_type != null">operation_type,</if>
+      <if test="quantity != null">quantity,</if>
+      <if test="operation_time != null">operation_time,</if>
+      <if test="description != null">description,</if>
+      <if test="status != null">status,</if>
+      <if test="rollback_status != null">rollback_status,</if>
+      <if test="rollback_time != null">rollback_time,</if>
+      <if test="update_time != null">update_time,</if>
+      <if test="create_time != null">create_time,</if>
+    </trim>
+    values
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">#{id,jdbcType=BIGINT},</if>
+      <if test="stock_id != null">#{stock_id,jdbcType=BIGINT},</if>
+      <if test="order_id != null">#{order_id,jdbcType=BIGINT},</if>
+      <if test="operation_type != null">#{operation_type,jdbcType=VARCHAR},</if>
+      <if test="quantity != null">#{quantity,jdbcType=INTEGER},</if>
+      <if test="operation_time != null">#{operation_time,jdbcType=TIMESTAMP},</if>
+      <if test="description != null">#{operation_type,jdbcType=VARCHAR},</if>
+      <if test="rollback_status != null">#{rollback_status,jdbcType=INTEGER},</if>
+      <if test="status != null">#{status,jdbcType=INTEGER},</if>
+      <if test="rollback_time != null">#{rollback_time,jdbcType=TIMESTAMP},</if>
+      <if test="update_time != null">#{update_time,jdbcType=TIMESTAMP},</if>
+      <if test="create_time != null">#{create_time,jdbcType=TIMESTAMP},</if>
+    </trim>
+  </insert>
+
+
+  <update id="updateStockOnDoLog" parameterType="org.example.entities.StockOnDoLog">
+    UPDATE `t_stock_undo_log`
+    <trim prefix='set' suffixOverrides=','>
+      <if test="id != null"> id = #{id},</if>
+      <if test="stock_id != null"> stock_id = #{stock_id},</if>
+      <if test="order_id != null"> order_id = #{order_id},</if>
+      <if test="operation_type != null"> operation_type = #{operation_type},</if>
+      <if test="quantity != null"> quantity = #{quantity},</if>
+      <if test="operation_time != null"> operation_time = #{operation_time},</if>
+      <if test="description != null"> description = #{description},</if>
+      <if test="status != null"> status = #{status},</if>
+      <if test="rollback_status != null"> rollback_status = #{rollback_status},</if>
+      <if test="rollback_time != null"> rollback_time = #{rollback_time},</if>
+      <if test="create_time != null"> create_time = #{create_time},</if>
+      <if test="update_time != null"> update_time = #{update_time},</if>
+    </trim>
+    WHERE id = #{id}
+  </update>
+
+
+  <select id="findById" resultType="org.example.entities.StockOnDoLog">
+    SELECT * FROM t_stock_undo_log Where id = #{id};
+  </select>
+
+
+</mapper>

@@ -36,6 +36,15 @@ spring:
     port: 5672
     username: user
     password: 1234
+    # 发布者返回确认
+    publisher-returns: true
+    template:
+      # 发送消息时强制确认
+      mandatory: true
+    listener:
+      simple:
+        # 消费者手动确认模式
+        acknowledge-mode: manual
 
   application:
     name: stock-service #服務名*服務註冊與發現時使用 如果是多台會共用名

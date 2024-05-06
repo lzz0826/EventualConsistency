@@ -115,6 +115,12 @@
       <artifactId>commons-lang3</artifactId>
     </dependency>
 
+    <!-- RabbitMQ   -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-amqp</artifactId>
+    </dependency>
+
 
     <!--  測試   -->
     <!-- JUnit 測試框架依賴 -->
