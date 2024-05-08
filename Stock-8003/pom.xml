@@ -90,11 +90,11 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
-<!--    &lt;!&ndash; Spring Boot 測試 Starter 依賴 &ndash;&gt;-->
-<!--    <dependency>-->
-<!--      <groupId>org.springframework.boot</groupId>-->
-<!--      <artifactId>spring-boot-starter-test</artifactId>-->
-<!--    </dependency>-->
+    <!-- Spring Boot 測試 Starter 依賴 -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+    </dependency>
 
     <!-- json 轉換器 -->
     <dependency>
@@ -122,21 +122,22 @@
     </dependency>
 
 
-    <!--  測試   -->
     <!-- JUnit 測試框架依賴 -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
+
+    <!-- OkHttp -->
     <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-test</artifactId>
-      <scope>test</scope>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
     </dependency>
+
+    <!-- 序列化方式 搭配OkHttp-->
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-test</artifactId>
-      <scope>test</scope>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
     </dependency>
 
   </dependencies>

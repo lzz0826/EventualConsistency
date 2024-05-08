@@ -1,4 +1,4 @@
-package test;
+package test.mapper;
 
 import jakarta.annotation.Resource;
 import java.math.BigDecimal;
@@ -7,11 +7,18 @@ import java.util.List;
 import org.example.dao.StockDao;
 import org.example.entities.Stock;
 import org.junit.Test;
+import test.BastTest;
 
-public class MapperTest extends BastTest{
+public class StockDaoMapperTest extends BastTest {
 
   @Resource
   private StockDao dao;
+
+  @Test
+  public void test(){
+    int i = dao.increaseQuantity(884L,2,new Date());
+    System.out.println(i);
+  }
 
   @Test
   public void testFindAll(){

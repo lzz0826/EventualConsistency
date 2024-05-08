@@ -23,7 +23,8 @@ public interface StockDao {
   public int deductedQuantity(@Param("id") Long id ,@Param("deducted_quantity") int deductedQuantity,
       @Param("update_time") Date date);
 
-
+  public int increaseQuantity(@Param("id") Long id ,@Param("increase_quantity") int increaseQuantity,
+                              @Param("update_time") Date date);
 
 
 }

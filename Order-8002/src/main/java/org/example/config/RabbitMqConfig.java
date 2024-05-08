@@ -70,7 +70,7 @@ public class RabbitMqConfig {
     }
 
     //事件交换机
-    public static final String Order_Event_Exchange = "order-even-exchange" ;
+    public static final String Order_Event_Exchange = "order-event-exchange" ;
     @Bean
     public Exchange orderEventExchange(){
 //        String name, boolean durable, boolean autoDelete, Map<String, Object> arguments

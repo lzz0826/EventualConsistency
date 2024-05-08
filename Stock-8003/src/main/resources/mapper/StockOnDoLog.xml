@@ -77,4 +77,9 @@
   </select>
 
 
+  <select id="findByStockIdAndOrderId" resultType="org.example.entities.StockOnDoLog">
+    SELECT * FROM t_stock_undo_log Where stock_id = #{stock_id} AND order_id = #{order_id};
+  </select>
+
+
 </mapper>

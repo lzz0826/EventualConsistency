@@ -69,10 +69,18 @@
     <trim prefix='set' suffixOverrides=','>
       <if test="deducted_quantity != null"> quantity = quantity - #{deducted_quantity},</if>
       <if test="update_time != null"> update_time = update_time,</if>
-
     </trim>
     WHERE id = #{id}
     AND quantity >= #{deducted_quantity}
+  </update>
+
+  <update id="increaseQuantity">
+    UPDATE `t_stock`
+    <trim prefix='set' suffixOverrides=','>
+      <if test="increase_quantity != null"> quantity = quantity + #{increase_quantity},</if>
+      <if test="update_time != null"> update_time = update_time,</if>
+    </trim>
+    WHERE id = #{id}
   </update>
 
 

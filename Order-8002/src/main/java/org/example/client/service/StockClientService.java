@@ -45,6 +45,9 @@ public class StockClientService {
   }
 
 
+  /**
+   * Seata 扣庫存 強一致
+   */
   public boolean deductedStockQuantity(String id, String  quantity) throws NoStockException {
     String url = ServiceUrlEnum.Stock.getServiceUrl(ServiceUrlEnum.Stock.name)+"deductedStockQuantity";
     Map<String, String> params = new HashMap<>();
@@ -53,6 +56,40 @@ public class StockClientService {
     params.put("id",id);
     params.put("quantity",quantity);
 
+
+    Integer statusCode;
+    String data;
+
+    try {
+      String rep = OkHttpUtil.post(url,headers, JSON.toJSONString(params));
+      statusCode = (Integer) JSON.parseObject(rep).get("statusCode");;
+      data =  (String) JSON.parseObject(rep).get("data");
+    }catch (Exception e){
+      log.error("請求失敗 : "+url);
+      return false;
+    }
+
+    if(statusCode == 3002){
+      throw new NoStockException();
+    }
+
+    if(statusCode == 0 && data.equals("true")){
+      return true;
+    }
+    return false;
+  }
+
+
+  /**
+   * RabbitMq 扣庫存 最終一致性
+   */
+  public boolean deductedStockQuantityMq(String id,String orderId , String  quantity) throws NoStockException {
+    String url = ServiceUrlEnum.Stock.getServiceUrl(ServiceUrlEnum.Stock.name)+"deductedStockQuantityMq";
+    Map<String, String> params = new HashMap<>();
+    Map<String, String> headers = new HashMap<>();
+    params.put("stockId",id);
+    params.put("orderId",orderId);
+    params.put("quantity",quantity);
 
     Integer statusCode;
     String data;

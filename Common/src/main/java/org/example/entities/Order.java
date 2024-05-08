@@ -24,6 +24,7 @@ public class Order implements Serializable {
 
   private Integer type;
 
+  //定單狀態 Fail = 0, Success=1  ,CreateIng = 2 , PayIng = 3
   private Integer status;
 
   private Date update_time;

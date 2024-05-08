@@ -26,7 +26,7 @@ public class RabbitMqConfig {
 
     public static final String Stock_Delay_Queue_Name = "stock.delay.queue";
 
-    public static final int Stock_Delay_Queue_Ttl = 12000;
+    public static final int Stock_Delay_Queue_Ttl = 120000;
 
     @Bean
     public Queue stockDelayQueue(){
@@ -37,7 +37,7 @@ public class RabbitMqConfig {
         arguments.put("x-dead-letter-routing-key",Stock_Release_Key);
         //每個消息的過期時間(超過會丟棄 或是配置死信)
         arguments.put("x-message-ttl",Stock_Delay_Queue_Ttl);
-        return new Queue(Stock_Delay_Queue_Name,true,false,false);
+        return new Queue(Stock_Delay_Queue_Name,true,false,false,arguments);
 
     }
 
@@ -60,7 +60,7 @@ public class RabbitMqConfig {
     public static final String Stock_Locked_Key = "stock.locked";
 
     @Bean
-    public Binding stockLocked(){
+    public Binding stockLockedBinding(){
         return new Binding(
                 Stock_Delay_Queue_Name,
                 Binding.DestinationType.QUEUE,
@@ -73,7 +73,7 @@ public class RabbitMqConfig {
 
     public static final String Stock_Release_Key = "stock.release.#";
     @Bean
-    public Binding stockRelease(){
+    public Binding stockReleaseBinding(){
 //        @Nullable Queue lazyQueue, @Nullable String destination, DestinationType destinationType,
 //        String exchange, @Nullable String routingKey, @Nullable Map<String, Object> arguments
         return new Binding(

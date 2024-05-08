@@ -5,18 +5,24 @@ import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.example.common.BaseResp;
 import org.example.common.StatusCode;
+import org.example.controller.req.DeductedStockQuantityMqReq;
 import org.example.controller.req.DeductedStockQuantityReq;
 import org.example.controller.req.UpdateStockReq;
 import org.example.entities.Stock;
+import org.example.exception.AddStockOnDoLogException;
 import org.example.exception.NoStockException;
 import org.example.exception.UpdateStockException;
+import org.example.mq.CheckStockMq;
 import org.example.service.StockService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import static org.example.config.RabbitMqConfig.*;
 
 @RestController
 public class StockController {
@@ -63,6 +69,34 @@ public class StockController {
     boolean b = stockService.deductedStockQuantity(req.getId(), req.getQuantity());
 
     return BaseResp.ok(String.valueOf(b),StatusCode.Success);
+  }
+
+  /**
+   * 扣庫存 使用MQ做最終一致性
+   */
+  @PostMapping("/deductedStockQuantityMq")
+  public BaseResp<String> deductedStockQuantityMq(@RequestBody @Valid DeductedStockQuantityMqReq req)
+          throws NoStockException, AddStockOnDoLogException {
+    boolean b = stockService.deductedStockQuantityMq(req.getStockId(), req.getOrderId(),req.getQuantity());
+    return BaseResp.ok(String.valueOf(b),StatusCode.Success);
+  }
+
+
+
+  @Resource
+  private RabbitTemplate rabbitTemplate;
+
+  @GetMapping("/testOrderMq")
+  private BaseResp<String> testOrderMq(){
+    CheckStockMq build = CheckStockMq
+            .builder()
+            .stock_undo_log_id(1L)
+            .stock_id(2L)
+            .order_id(3L)
+            .build();
+    //使用交換機+路由
+    rabbitTemplate.convertAndSend(Stock_Event_Exchange,Stock_Locked_Key,build);
+    return BaseResp.ok("成功");
   }
 
 

@@ -55,7 +55,10 @@ public enum StatusCode {
 
   AddOrderStockMiddleFail(2006,"添加DB AddOrderStockMiddle失敗"),
 
-  /**
+  OrderServerError(2007,"Order服務異常"),
+
+
+ /**
    * Stock 3000
    */
   UpdateStockFail(3000,"更新庫存失敗"),

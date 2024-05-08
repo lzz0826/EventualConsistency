@@ -20,8 +20,8 @@ public class StockOnDoLogMapperTest extends BastTest{
   @Test
   public void testAddStockOnDoLog(){
     StockOnDoLog build = StockOnDoLog.builder()
-            .stock_id(99L)
-            .order_id(88L)
+            .stock_id(997L)
+            .order_id(77L)
             .operation_type(OperationTypeEnum.Decrease.name)
             .quantity(1)
             .operation_time(new Date())

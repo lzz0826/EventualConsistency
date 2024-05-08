@@ -46,9 +46,8 @@ public class OrderService {
   private OrderStockMiddleDao orderStockMiddleDao;
 
   /**
-   * 創建訂單
+   * 創建訂單 Seata 強一致
    **/
-
   // Transactional 第一入口加上GlobalTransactional 補償任務 Seata 會做
   // 原本的 @Transactional還是要加上
   @GlobalTransactional
@@ -104,6 +103,67 @@ public class OrderService {
         .create_time(new Date())
         .update_time(new Date())
         .build();
+
+    boolean addOrderStockMiddle = orderStockMiddleDao.addOrderStockMiddle(orderStockMiddle);
+
+    if (!addOrderStockMiddle) {
+      log.error(StatusCode.AddOrderStockMiddleFail.msg);
+      throw new AddOrderStockMiddleException();
+    }
+    return true;
+  }
+
+
+  /**
+   * 創建訂單 Mq 最終一致
+   **/
+  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+  public boolean createOrderMq(String product_name, int quantity)
+          throws OkHttpGetException, NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
+
+    BaseResp<Stock> stockByProductName = stockClientService.getStockByProductName(product_name);
+    Stock stock = RepStock(stockByProductName);
+
+    if (stock == null) {
+      throw new NoStockException();
+    }
+
+    Order order = Order
+            .builder()
+            .price(stock.getPrice().multiply(BigDecimal.valueOf(quantity)))
+            .type(1)
+            .status(OrderStatusEnum.CreateIng.code)
+            .create_time(new Date())
+            .update_time(new Date())
+            .build();
+
+    Long addOrder = orderDao.addOrderRepId(order);
+    if (addOrder == 0) {
+      log.error(StatusCode.AddOrderFail.msg);
+      throw new AddOrderException();
+    }
+
+    Long id = stock.getId();
+
+    boolean deductedStockQuantity = stockClientService.deductedStockQuantityMq(String.valueOf(id),
+            String.valueOf(order.getId()), String.valueOf(quantity));
+
+    if (!deductedStockQuantity) {
+      throw new DeductedStockQuantityException();
+    }
+
+    //*如果沒有分布式事務 這邊報異常 Order會回滾(沒有天價訂單)
+//    int sdf = 10/0;
+
+    OrderStockMiddle orderStockMiddle = OrderStockMiddle
+            .builder()
+            .order_id(order.getId())
+            .status(order.getStatus())
+            .deducted_quantity(quantity)
+            .stock_id(stock.getId())
+            .create_time(new Date())
+            .update_time(new Date())
+            .build();
 
     boolean addOrderStockMiddle = orderStockMiddleDao.addOrderStockMiddle(orderStockMiddle);
 

@@ -17,10 +17,7 @@ import org.example.exception.NoStockException;
 import org.example.exception.OkHttpGetException;
 import org.example.service.OrderService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.example.config.RabbitMqConfig.Order_Create_Order_Key;
 import static org.example.config.RabbitMqConfig.Order_Event_Exchange;
@@ -34,15 +31,33 @@ public class OrderController {
   private OrderService orderService;
 
 
-
-  //Seata 分布式事務測試 @GlobalTransactional(目前是直連 沒有搭配服務註冊)
-  //需要在 每個要分布式事務服務 DB創建 Seata表 和resources下添加 file.conf.registry.conf (需要看使用哪個ROM)
-  //Seata1.7.1 版本問題待解決(至少要java11) 需要升級spring boot 3.0 或是 降版Seata1.5.2
+  /**
+   * 創建訂單 Seata 強一致
+   *  Seata 分布式事務測試 @GlobalTransactional(目前是直連 沒有搭配服務註冊)
+   *  需要在 每個要分布式事務服務 DB創建 Seata表 和resources下添加 file.conf.registry.conf (需要看使用哪個ROM)
+   *  Seata1.7.1 版本問題待解決(至少要java11) 需要升級spring boot 3.0 或是 降版Seata1.5.2
+   **/
   @PostMapping("/createOrder")
   public BaseResp<String> createOrder(@RequestBody @Valid CreateOrderReq req)
       throws OkHttpGetException, NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
 
     boolean order = orderService.createOrder(req.getProduct_name(),req.getQuantity());
+
+    if(order){
+      return BaseResp.ok("成功");
+    }
+    return BaseResp.ok("失敗");
+
+  }
+
+  /**
+   * 創建訂單 Mq 最終一致
+   **/
+  @PostMapping("/createOrderMq")
+  public BaseResp<String> createOrderMq(@RequestBody @Valid CreateOrderReq req)
+          throws OkHttpGetException, NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
+
+    boolean order = orderService.createOrderMq(req.getProduct_name(),req.getQuantity());
 
     if(order){
       return BaseResp.ok("成功");
@@ -57,6 +72,12 @@ public class OrderController {
     List<Order> allOrderList = orderService.getAllOrderList();
 
     return BaseResp.ok(allOrderList);
+  }
+
+  @GetMapping("/getOrderById/{id}")
+  private BaseResp<Order> getOrderById(@PathVariable("id")Long id){
+    Order order = orderService.getOrderById(id);
+    return BaseResp.ok(order);
   }
 
   @Resource

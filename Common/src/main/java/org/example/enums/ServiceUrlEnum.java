@@ -5,7 +5,9 @@ import org.apache.commons.lang3.StringUtils;
 
 public enum ServiceUrlEnum {
 
-  Stock("Stock","127.0.0.1","8003");
+  Stock("Stock","127.0.0.1","8003"),
+  Order("Order","127.0.0.1","8002");
+
 
   public final String name;
   public final String ip;

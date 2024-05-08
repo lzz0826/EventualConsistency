@@ -11,6 +11,8 @@ public interface StockOnDoLogDao {
 
   public StockOnDoLog findById(Long id);
 
+  public StockOnDoLog findByStockIdAndOrderId(Long stock_id ,Long order_id);
+
   public int updateStockOnDoLog(StockOnDoLog stockOnDoLog);
 
 
