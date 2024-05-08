@@ -78,6 +78,7 @@ public class StockController {
   public BaseResp<String> deductedStockQuantityMq(@RequestBody @Valid DeductedStockQuantityMqReq req)
           throws NoStockException, AddStockOnDoLogException {
     boolean b = stockService.deductedStockQuantityMq(req.getStockId(), req.getOrderId(),req.getQuantity());
+    //TODO 失敗返回 deductedStockQuantityMq 失敗本地會回滾 通知order服務 讓order也本地回滾
     return BaseResp.ok(String.valueOf(b),StatusCode.Success);
   }
 
