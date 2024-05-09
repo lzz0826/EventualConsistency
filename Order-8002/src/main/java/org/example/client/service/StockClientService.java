@@ -6,6 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import io.seata.core.context.RootContext;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import lombok.extern.log4j.Log4j2;
@@ -42,6 +43,20 @@ public class StockClientService {
     //使用TypeReference<>{} 隱式函數轉換
     BaseResp<Stock> baseResp = JSON.parseObject(rep, new TypeReference<BaseResp<Stock>>() {});
     return baseResp;
+  }
+
+  public List<Stock> getStockByProductNames(List<String> productName) {
+    String url = ServiceUrlEnum.Stock.getServiceUrl(ServiceUrlEnum.Stock.name)+"getStockByProductNames";
+    String jsonProductNames = JSON.toJSONString(productName);
+    Map<String, String> header = new HashMap<>();
+    String rep = OkHttpUtil.post(url,header,jsonProductNames);
+    //使用TypeReference<>{} 隱式函數轉換
+    BaseResp<List<Stock>> baseResp = JSON.parseObject(rep, new TypeReference<BaseResp<List<Stock>>>() {});
+
+    if (baseResp != null && baseResp.getStatusCode() == StatusCode.Success.code){
+      return baseResp.getData();
+    }
+    return null;
   }
 
 

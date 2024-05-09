@@ -8,18 +8,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateOrderReq {
-
-
-  @NotNull(message = "product_name不能为空")
-  private String product_name;
-
-  @NotNull(message = "quantity不能为空")
-  private int quantity;
+public class CreateOrderMqReq {
+    @NotNull(message = "product_quantity不能为空")
+    Map<String,Integer> product_quantity;
 
 }

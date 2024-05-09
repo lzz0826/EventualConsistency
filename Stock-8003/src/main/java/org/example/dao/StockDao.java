@@ -20,6 +20,9 @@ public interface StockDao {
 
   public Stock findByProductName(String ProductName);
 
+  public List<Stock>findByProductNameList(List<String> product_names);
+
+
   public int deductedQuantity(@Param("id") Long id ,@Param("deducted_quantity") int deductedQuantity,
       @Param("update_time") Date date);
 

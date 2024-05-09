@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 import static org.example.config.RabbitMqConfig.*;
 
 @RestController
@@ -41,6 +43,12 @@ public class StockController {
   @GetMapping("/getStockByProductName/{productName}")
   public BaseResp<Stock> getStockByProductName(@PathVariable("productName")String productName){
     Stock stock = stockService.getStockByProductName(productName);
+    return BaseResp.ok(stock);
+  }
+
+  @PostMapping("/getStockByProductNames")
+  public BaseResp<List<Stock>> getStockByProductNames(@RequestBody()List<String> productNames){
+    List<Stock> stock = stockService.getStockByProductNameList(productNames);
     return BaseResp.ok(stock);
   }
 

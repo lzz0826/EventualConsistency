@@ -98,4 +98,14 @@
     SELECT * FROM t_stock Where product_name = #{product_name};
   </select>
 
+
+
+
+  <select id="findByProductNameList" resultType="org.example.entities.Stock">
+    SELECT * FROM t_stock WHERE product_name IN
+    <foreach collection="list" item="item" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </select>
+
 </mapper>

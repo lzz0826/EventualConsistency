@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import org.example.common.BaseResp;
+import org.example.controller.rep.CreateOrderMqReq;
 import org.example.controller.rep.CreateOrderReq;
 import org.example.entities.Order;
 import org.example.exception.AddOrderException;
@@ -54,10 +55,10 @@ public class OrderController {
    * 創建訂單 Mq 最終一致
    **/
   @PostMapping("/createOrderMq")
-  public BaseResp<String> createOrderMq(@RequestBody @Valid CreateOrderReq req)
-          throws OkHttpGetException, NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
+  public BaseResp<String> createOrderMq(@RequestBody @Valid CreateOrderMqReq req)
+          throws NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
 
-    boolean order = orderService.createOrderMq(req.getProduct_name(),req.getQuantity());
+    boolean order = orderService.createOrderMq(req.getProduct_quantity());
 
     if(order){
       return BaseResp.ok("成功");

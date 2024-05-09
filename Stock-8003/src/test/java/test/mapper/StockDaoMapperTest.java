@@ -2,6 +2,7 @@ package test.mapper;
 
 import jakarta.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.example.dao.StockDao;
@@ -16,6 +17,15 @@ public class StockDaoMapperTest extends BastTest {
 
   @Test
   public void test(){
+    List<String> list = new ArrayList<>();
+    list.add("POK");
+    List<Stock> byProductNameList = dao.findByProductNameList(list);
+    System.out.println(byProductNameList);
+
+  }
+
+  @Test
+  public void testIncreaseQuantity(){
     int i = dao.increaseQuantity(884L,2,new Date());
     System.out.println(i);
   }
