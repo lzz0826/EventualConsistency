@@ -16,7 +16,7 @@ public class StockOnDoLogDaoMapperTest extends BastTest {
 
     @Test
     public void testFindByStockIdAndOrderId(){
-        StockOnDoLog byStockIdAndOrderId = dao.findByStockIdAndOrderId(22L,33L);
+        StockOnDoLog byStockIdAndOrderId = dao.findByStockIdAndOrderId(99L,92L);
         System.out.println(byStockIdAndOrderId);
 
     }

@@ -14,6 +14,7 @@ import org.example.service.StockOnDoLogService;
 import org.example.service.StockService;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -26,10 +27,9 @@ import static org.example.client.service.StockClientService.RepOrder;
 import static org.example.config.RabbitMqConfig.Stock_Event_Exchange;
 import static org.example.config.RabbitMqConfig.Stock_Locked_Key;
 
-@Service
+@Component
 @Slf4j
 public class StockRollbackCheck {
-
 
     @Resource
     private StockOnDoLogService stockOnDoLogService;
@@ -42,6 +42,21 @@ public class StockRollbackCheck {
     @Resource
     private RabbitTemplate rabbitTemplate;
 
+    /**
+     * 檢查
+     * ---
+     * 不需要回滾:
+     * 1.訂單確認支付後 確定庫存可以後不需要補償
+     * ---
+     * 需要回滾:
+     * 1.訂單創建時打完扣Stock API後是否有回滾 訂單回滾庫存需要回滾補償
+     * 2.訂單創建完後超時為支付 庫存需要回滾(需要打訂單API)
+     * ---
+     * 返回隊列:
+     * 1.訂單服務連不到
+     * 2.訂單狀態為確認
+     * 3.其他因素
+     */
     public void stockCheck(CheckStockMq checkStock , Channel channel , Message msg) throws IOException {
         Long stockUndoLogId = checkStock.getStock_undo_log_id();
         Long stockId = checkStock.getStock_id();
@@ -61,6 +76,12 @@ public class StockRollbackCheck {
 
     /**
      * 匹配訂單日誌
+     * 有stockUndoLogId使用stockUndoLogId查詢
+     * 沒有stockUndoLogId使用 stockId + orderId 查詢
+     * stockId + orderId :
+     * 如果前一次order服務回滾經測試 orderId回滾自增建還是會算 沒有重複orderId的疑慮
+     * 保險起 確保拿到最新的
+     *
      */
     private StockOnDoLog findStockOnDoLog(Long stockUndoLogId, Long stockId, Long orderId) {
         if (stockUndoLogId != null) {

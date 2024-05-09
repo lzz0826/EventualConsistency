@@ -78,7 +78,8 @@
 
 
   <select id="findByStockIdAndOrderId" resultType="org.example.entities.StockOnDoLog">
-    SELECT * FROM t_stock_undo_log Where stock_id = #{stock_id} AND order_id = #{order_id};
+    SELECT * FROM t_stock_undo_log WHERE stock_id = #{stock_id} AND order_id = #{order_id}
+    ORDER BY create_time DESC LIMIT 1;
   </select>
 
 

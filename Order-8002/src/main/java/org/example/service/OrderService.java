@@ -116,6 +116,11 @@ public class OrderService {
 
   /**
    * 創建訂單 Mq 最終一致
+   * 目前 一個產品一個訂單
+   * 之後可以用List帶product_name 每筆訂單配一個product_name
+   * TODO getStockByProductName批量查詢庫存 只要有一筆不足直接返回
+   *  在用返回的stockByProductNameList 遍利 每一個product_name一筆訂單
+   *
    **/
   @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
   public boolean createOrderMq(String product_name, int quantity)
@@ -173,6 +178,8 @@ public class OrderService {
     }
     return true;
   }
+
+
 
 
   /**

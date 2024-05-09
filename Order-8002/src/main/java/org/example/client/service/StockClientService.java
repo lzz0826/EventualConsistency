@@ -107,10 +107,7 @@ public class StockClientService {
       throw new NoStockException();
     }
 
-    if(statusCode == 0 && data.equals("true")){
-      return true;
-    }
-    return false;
+      return statusCode == 0 && data.equals("true");
   }
 
   public static Stock RepStock(BaseResp<Stock> baseResp){
