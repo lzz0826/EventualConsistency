@@ -93,8 +93,7 @@ public class OrderMqService {
             createOrderStockMiddle(order, stock,product_quantity.get(stock.getProduct_name()));
         }
 
-        //TODO MQ發消息檢查訂單狀態
-//        rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Create_Order_Key,checkOrderMq);
+        rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Create_Order_Key,checkOrderMq);
 
         return true;
     }

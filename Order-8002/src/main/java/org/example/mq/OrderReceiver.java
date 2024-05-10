@@ -29,17 +29,7 @@ public class OrderReceiver {
     @RabbitHandler
     private void orderReceive(CheckOrderMq checkOrderMq  , Channel channel , Message msg) throws IOException {
         log.info("Received order check: {}", checkOrderMq);
-
         orderRollbackCheck.orderCheck(checkOrderMq,channel ,msg);
-
-        System.out.println(checkOrderMq.toString());
-        System.out.println("-----------------");
-        System.out.println(msg.getMessageProperties().toString());
-
-        //TODO檢查訂單狀態 為支付改為 失敗
-
-        channel.basicAck(msg.getMessageProperties().getDeliveryTag(),false);
-
     }
 
 

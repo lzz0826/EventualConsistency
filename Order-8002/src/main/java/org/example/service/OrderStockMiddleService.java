@@ -8,6 +8,7 @@ import org.example.entities.middle.OrderStockMiddle;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Log4j2
@@ -23,6 +24,10 @@ public class OrderStockMiddleService {
     public int updateOrderStockMiddle(OrderStockMiddle orderStockMiddle){
         orderStockMiddle.setCreate_time(new Date());
         return orderStockMiddleDao.updateOrderStockMiddle(orderStockMiddle);
+    }
+
+    public List<OrderStockMiddle> findOrderId(Long orderId){
+        return orderStockMiddleDao.findOrderId(orderId);
     }
 
 

@@ -4,6 +4,7 @@ import com.rabbitmq.client.Channel;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.example.entities.Order;
+import org.example.entities.middle.OrderStockMiddle;
 import org.example.enums.OrderStatusEnum;
 import org.example.enums.OrderStockMiddleStatusEnum;
 import org.example.service.OrderService;
@@ -13,9 +14,10 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.example.config.RabbitMqConfig.*;
-import static org.example.mq.MqStaticResource.Order_Event_Exchange;
+import static org.example.mq.MqStaticResource.*;
 
 
 @Component
@@ -53,7 +55,6 @@ public class OrderRollbackCheck {
             channel.basicAck(msg.getMessageProperties().getDeliveryTag(), false);
         }
 
-
     }
 
 
@@ -76,6 +77,7 @@ public class OrderRollbackCheck {
                     //訂單付超時 更新訂單 中間表 狀態 Fail 通知庫存回滾(已有查單給庫存做回滾) 雙邊確認
                     updateOrder(order.getId(), OrderStatusEnum.Fail.code);
                     updateOrderStock(order.getId(),OrderStockMiddleStatusEnum.Fail.code);
+                    notifyStockRollback(order.getId());
                     channel.basicAck(msg.getMessageProperties().getDeliveryTag(), false);
                     reQueue = false;
                     break;
@@ -111,13 +113,19 @@ public class OrderRollbackCheck {
     /**
      * 通知 Stock滾回數據 (雙邊驗證)
      * 通過MQ
+     * TODO Order服務死掉 待測試
      */
-    protected void notifyStockRollback(Order order) {
-
-//        rabbitTemplate.convertAndSend(Stock_Event_Exchange,Stock_Locked_Key,checkStockMq);
-
+    protected void notifyStockRollback(Long orderId) {
+        List<OrderStockMiddle> orderStockMiddles = orderStockMiddleService.findOrderId(orderId);
+        for (OrderStockMiddle orderStockMiddle : orderStockMiddles) {
+            CheckStockMq checkStockMq = CheckStockMq
+                    .builder()
+                    .stock_id(orderStockMiddle.getStock_id())
+                    .order_id(orderId)
+                    .build();
+            rabbitTemplate.convertAndSend(Stock_Event_Exchange,Stock_Locked_Key,checkStockMq);
+        }
     }
-
 
     /**
      * 重新放回隊列 等待下次檢查
