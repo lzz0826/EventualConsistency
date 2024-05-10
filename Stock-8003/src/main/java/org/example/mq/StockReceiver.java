@@ -4,30 +4,14 @@ package org.example.mq;
 import com.rabbitmq.client.Channel;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.example.client.service.StockClientService;
-import org.example.entities.Order;
-import org.example.entities.Stock;
-import org.example.entities.StockOnDoLog;
-import org.example.enums.OperationTypeEnum;
-import org.example.enums.RollbackStatusEnum;
-import org.example.exception.OKHttpException;
-import org.example.exception.OrderServerErrorException;
-import org.example.service.StockOnDoLogService;
-import org.example.service.StockService;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Date;
 
-import static org.example.client.service.StockClientService.RepOrder;
-import static org.example.config.RabbitMqConfig.*;
+import static org.example.mq.MqStaticResource.Stock_Release_Stock_Queue_Name;
 
 @Component
 @Slf4j

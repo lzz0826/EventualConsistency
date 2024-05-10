@@ -12,9 +12,10 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 
+import static org.example.mq.MqStaticResource.*;
+
 @Configuration
 public class RabbitMqConfig {
-
     /**
      *  使用JSON序列化機制 進行消息轉換
      */
@@ -22,9 +23,6 @@ public class RabbitMqConfig {
     public MessageConverter messageConverter(){
         return new Jackson2JsonMessageConverter();
     }
-
-
-    public static final String Stock_Delay_Queue_Name = "stock.delay.queue";
 
     public static final int Stock_Delay_Queue_Ttl = 120000;
 
@@ -41,14 +39,12 @@ public class RabbitMqConfig {
 
     }
 
-    public static final String Stock_Release_Stock_Queue_Name = "stock.release.stock.queue";
     @Bean
     public Queue stockReleaseStockQueue(){
         return new Queue(Stock_Release_Stock_Queue_Name,true,false,false);
 
     }
 
-    public static final String Stock_Event_Exchange = "stock-event-exchange";
     @Bean
     public Exchange stockEventExchange(){
 //        String name, boolean durable, boolean autoDelete, Map<String, Object> arguments
@@ -56,8 +52,6 @@ public class RabbitMqConfig {
 
     }
 
-
-    public static final String Stock_Locked_Key = "stock.locked";
 
     @Bean
     public Binding stockLockedBinding(){
@@ -71,7 +65,6 @@ public class RabbitMqConfig {
     }
 
 
-    public static final String Stock_Release_Key = "stock.release.#";
     @Bean
     public Binding stockReleaseBinding(){
 //        @Nullable Queue lazyQueue, @Nullable String destination, DestinationType destinationType,

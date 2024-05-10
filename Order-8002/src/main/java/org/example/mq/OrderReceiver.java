@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
-import static org.example.config.RabbitMqConfig.Order_Release_OrderQueue_Name;
+import static org.example.mq.MqStaticResource.Order_Release_OrderQueue_Name;
 
 
 @Component

@@ -27,6 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 import static org.example.config.RabbitMqConfig.*;
+import static org.example.mq.MqStaticResource.Stock_Event_Exchange;
+import static org.example.mq.MqStaticResource.Stock_Locked_Key;
 
 @RestController
 public class StockController {

@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 
+import static org.example.mq.MqStaticResource.*;
+
 @Configuration
 public class RabbitMqConfig {
 
@@ -24,15 +26,12 @@ public class RabbitMqConfig {
         return new Jackson2JsonMessageConverter();
     }
 
-
     /**
      *  订单与库存
      *  @Been
      *  容器中的 Binding Queue Exchange 都會自動創建
      */
 
-    //延遲隊列 (死信后会交给 orderReleaseOrderQueue)
-    public static final String Order_Delay_Queue_Name = "order.delay.queue" ;
     private static final int Order_Delay_Queue_Ttl = 60000;
     @Bean
     public Queue orderDelayQueue(){
@@ -55,8 +54,6 @@ public class RabbitMqConfig {
                 arguments);
     }
 
-    //訂單發布隊列
-    public static final String Order_Release_OrderQueue_Name = "order.release.order.queue" ;
 
     @Bean
     public Queue orderReleaseOrderQueue(){
@@ -69,8 +66,6 @@ public class RabbitMqConfig {
                 null);
     }
 
-    //事件交换机
-    public static final String Order_Event_Exchange = "order-event-exchange" ;
     @Bean
     public Exchange orderEventExchange(){
 //        String name, boolean durable, boolean autoDelete, Map<String, Object> arguments
@@ -92,9 +87,6 @@ public class RabbitMqConfig {
                 Order_Create_Order_Key,
                 null);
     }
-
-    //發布訂單綁定
-    public static final String Order_Release_Order_Key = "order.release.order" ;
 
     @Bean
     public Binding orderReleaseOrder(){

@@ -19,8 +19,9 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.example.config.RabbitMqConfig.Stock_Event_Exchange;
-import static org.example.config.RabbitMqConfig.Stock_Locked_Key;
+import static org.example.mq.MqStaticResource.Stock_Event_Exchange;
+import static org.example.mq.MqStaticResource.Stock_Locked_Key;
+
 @Service
 @Log4j2
 public class StockMqService {

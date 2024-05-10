@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.example.config.RabbitMqConfig.*;
+import static org.example.mq.MqStaticResource.Order_Event_Exchange;
 
 @Log4j2
 @Service
@@ -93,7 +94,7 @@ public class OrderMqService {
         }
 
         //TODO MQ發消息檢查訂單狀態
-        rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Create_Order_Key,checkOrderMq);
+//        rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Create_Order_Key,checkOrderMq);
 
         return true;
     }

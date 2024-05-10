@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 import static org.example.config.RabbitMqConfig.*;
+import static org.example.mq.MqStaticResource.Order_Event_Exchange;
 
 
 @Component

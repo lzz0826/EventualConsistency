@@ -17,8 +17,8 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 import static org.example.client.service.StockClientService.RepOrder;
-import static org.example.config.RabbitMqConfig.Stock_Event_Exchange;
-import static org.example.config.RabbitMqConfig.Stock_Locked_Key;
+import static org.example.mq.MqStaticResource.Stock_Event_Exchange;
+import static org.example.mq.MqStaticResource.Stock_Locked_Key;
 
 @Component
 @Slf4j
