@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 @Log4j2
 @Service
-public class OrderServiceMq {
+public class OrderMqService {
 
     @Resource
     private StockClientService stockClientService;

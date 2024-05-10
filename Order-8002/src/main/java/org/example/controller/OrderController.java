@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+
 import org.example.common.BaseResp;
 import org.example.controller.rep.CreateOrderMqReq;
 import org.example.controller.rep.CreateOrderReq;
@@ -16,7 +17,9 @@ import org.example.exception.AddOrderStockMiddleException;
 import org.example.exception.DeductedStockQuantityException;
 import org.example.exception.NoStockException;
 import org.example.exception.OkHttpGetException;
+import org.example.service.OrderSeataService;
 import org.example.service.OrderService;
+import org.example.service.OrderMqService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,10 +29,13 @@ import static org.example.config.RabbitMqConfig.Order_Event_Exchange;
 @RestController
 public class OrderController {
 
-
-
   @Resource
   private OrderService orderService;
+  @Resource
+  private OrderMqService orderMqService;
+  @Resource
+  private OrderSeataService orderSeataService;
+
 
 
   /**
@@ -38,11 +44,11 @@ public class OrderController {
    *  需要在 每個要分布式事務服務 DB創建 Seata表 和resources下添加 file.conf.registry.conf (需要看使用哪個ROM)
    *  Seata1.7.1 版本問題待解決(至少要java11) 需要升級spring boot 3.0 或是 降版Seata1.5.2
    **/
-  @PostMapping("/createOrder")
-  public BaseResp<String> createOrder(@RequestBody @Valid CreateOrderReq req)
+  @PostMapping("/createOrderSeata")
+  public BaseResp<String> createOrderSeata(@RequestBody @Valid CreateOrderReq req)
       throws OkHttpGetException, NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
 
-    boolean order = orderService.createOrder(req.getProduct_name(),req.getQuantity());
+    boolean order = orderSeataService.createOrderSeata(req.getProduct_name(),req.getQuantity());
 
     if(order){
       return BaseResp.ok("成功");
@@ -58,7 +64,7 @@ public class OrderController {
   public BaseResp<String> createOrderMq(@RequestBody @Valid CreateOrderMqReq req)
           throws NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
 
-    boolean order = orderService.createOrderMq(req.getProduct_quantity());
+    boolean order = orderMqService.createOrderMq(req.getProduct_quantity());
 
     if(order){
       return BaseResp.ok("成功");

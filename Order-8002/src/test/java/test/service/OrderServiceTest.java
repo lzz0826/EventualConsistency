@@ -10,6 +10,7 @@ import org.example.exception.DeductedStockQuantityException;
 import org.example.exception.NoStockException;
 import org.example.exception.NotFoundOrderException;
 import org.example.exception.OkHttpGetException;
+import org.example.service.OrderSeataService;
 import org.example.service.OrderService;
 import org.junit.Test;
 import test.BastTest;
@@ -18,6 +19,10 @@ public class OrderServiceTest extends BastTest {
 
   @Resource
   private OrderService orderService;
+
+  @Resource
+  private OrderSeataService orderSeataService;
+
 
   @Test
   public void updateOrderStatusToPayIngTest() throws NotFoundOrderException {
@@ -52,7 +57,7 @@ public class OrderServiceTest extends BastTest {
         if(i == 3){
           int ee = 10/0;
         }
-        boolean order = orderService.createOrder(product_name,quantity);
+        boolean order = orderSeataService.createOrderSeata(product_name,quantity);
         System.out.println(order);
 
       }catch (Exception e){
