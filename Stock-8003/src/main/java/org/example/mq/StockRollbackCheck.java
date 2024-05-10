@@ -7,21 +7,14 @@ import org.example.client.service.StockClientService;
 import org.example.entities.Order;
 import org.example.entities.StockOnDoLog;
 import org.example.enums.OperationTypeEnum;
-import org.example.enums.RollbackStatusEnum;
 import org.example.exception.OKHttpException;
 import org.example.exception.OrderServerErrorException;
 import org.example.service.StockOnDoLogService;
-import org.example.service.StockService;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.Date;
 
 import static org.example.client.service.StockClientService.RepOrder;
 import static org.example.config.RabbitMqConfig.Stock_Event_Exchange;
@@ -37,7 +30,7 @@ public class StockRollbackCheck {
     private StockClientService stockClientService;
 
     @Resource
-    private StockService stockService;
+    private RollbackStockHandler rollbackStockHandler;
 
     @Resource
     private RabbitTemplate rabbitTemplate;
@@ -104,7 +97,7 @@ public class StockRollbackCheck {
             Order order = RepOrder(stockClientService.getOrderById(stockOnDoLog.getOrder_id()));
             if (order != null) {
                 switch (order.getStatus()) {
-                    //定單狀態 Fail = 0, Success=1  ,CreateIng = 2 , PayIng = 3
+                      //定單狀態 Fail = -1, Success=1  ,CreateIng = 0 , PayIng = 2
                     case 1:
                         //訂單已正常支付無需回滾 更新庫存日誌
                         updateStockLog(stockOnDoLog, 1);
@@ -113,7 +106,7 @@ public class StockRollbackCheck {
                         break;
                     case -1:
                         //訂單支付失敗需回滾 更新庫存日誌
-                        rollbackStock(stockOnDoLog);
+                        rollbackStockHandler.rollbackStock(stockOnDoLog);
                         reQueue = false;
                         channel.basicAck(msg.getMessageProperties().getDeliveryTag(), false);
                         break;
@@ -121,12 +114,12 @@ public class StockRollbackCheck {
                 //查無訂單 訂單回滾 庫存也需要回滾   操作: 扣除 操作狀態: 等待
             } else if (OperationTypeEnum.Decrease.name.equals(stockOnDoLog.getOperation_type())
                     && stockOnDoLog.getRollback_status() == 0) {
-                rollbackStock(stockOnDoLog);
+                rollbackStockHandler.rollbackStock(stockOnDoLog);
                 reQueue = false;
                 channel.basicAck(msg.getMessageProperties().getDeliveryTag(), false);
             }
         } catch (OKHttpException | OrderServerErrorException e) {
-            //打訂單服務時失敗 重新排隊
+            //打單服務時失敗 重新排隊
             log.error(e.getMessage());
         }
 
@@ -135,7 +128,6 @@ public class StockRollbackCheck {
             reQueueMessage(stockOnDoLog, channel, msg);
         }
     }
-
 
 
     /**
@@ -149,25 +141,6 @@ public class StockRollbackCheck {
         stockOnDoLogService.updateStockOnDoLog(newStockLog);
     }
 
-    /**
-     * 滾回數據
-     * 確保操作日誌 未回滾狀態才能執行(同事務)
-     * @Transactional 不能放在@RabbitListener()下
-     */
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ , rollbackFor = Exception.class)
-    protected void rollbackStock(StockOnDoLog stockOnDoLog) {
-        StockOnDoLog sdl = stockOnDoLogService.getStockOnDoLogDaoById(stockOnDoLog.getId());
-        if (RollbackStatusEnum.NotRollback.code == sdl.getRollback_status()){
-            stockService.increaseQuantity(stockOnDoLog.getStock_id(), stockOnDoLog.getQuantity());
-            StockOnDoLog newStockLog = StockOnDoLog.builder()
-                    .id(stockOnDoLog.getId())
-                    .status(-1)
-                    .rollback_status(RollbackStatusEnum.IsRollback.code)
-                    .rollback_time(new Date())
-                    .build();
-            stockOnDoLogService.updateStockOnDoLog(newStockLog);
-        }
-    }
 
     /**
      * 重新放回隊列 等待下次檢查

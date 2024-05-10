@@ -15,6 +15,12 @@ public class OrderDaoMapperTest extends BastTest {
   @Resource
   private OrderDao dao;
 
+  @Test
+  public void testUpdateOrderStatus(){
+    int i = dao.updateOrderStatus(100L,1,new Date());
+    System.out.println(i);
+  }
+
 
   @Test
   public void addOrderRepIdTest(){

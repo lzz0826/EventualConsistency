@@ -23,7 +23,6 @@ import org.example.exception.AddOrderException;
 import org.example.exception.AddOrderStockMiddleException;
 import org.example.exception.DeductedStockQuantityException;
 import org.example.exception.NoStockException;
-import org.example.exception.NotFoundOrderException;
 import org.example.exception.OkHttpGetException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -45,7 +44,7 @@ public class OrderSeataService {
 
     /**
      * 創建訂單 Seata 強一致
-     * 每筆訂單配一比商品(庫存)
+     * 每筆訂單配一筆商品(庫存)
      **/
     // Transactional 第一入口加上GlobalTransactional 補償任務 Seata 會做
     // 原本的 @Transactional還是要加上

@@ -125,6 +125,7 @@ public class StockClientService {
       return statusCode == 0 && data.equals("true");
   }
 
+
   public static Stock RepStock(BaseResp<Stock> baseResp){
     if(!baseResp.getStatusCode().equals(StatusCode.Success.code)){
       throw new StockServerErrorException();

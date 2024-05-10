@@ -2,6 +2,8 @@ package org.example.mq;
 
 
 import com.rabbitmq.client.Channel;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.example.entities.Order;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -14,18 +16,25 @@ import static org.example.config.RabbitMqConfig.Order_Release_OrderQueue_Name;
 
 
 @Component
+@Slf4j
 @RabbitListener(queues = Order_Release_OrderQueue_Name)
 public class OrderReceiver {
 
-    @RabbitHandler
-    private void orderReceive(Order order , Channel channel , Message msg) throws IOException {
+    @Resource
+    private OrderRollbackCheck orderRollbackCheck;
 
-        System.out.println(order.toString());
+    /**
+     *  接收創建訂單超過付款時間
+     */
+    @RabbitHandler
+    private void orderReceive(CheckOrderMq checkOrderMq  , Channel channel , Message msg) throws IOException {
+        log.info("Received order check: {}", checkOrderMq);
+
+        orderRollbackCheck.orderCheck(checkOrderMq,channel ,msg);
+
+        System.out.println(checkOrderMq.toString());
         System.out.println("-----------------");
         System.out.println(msg.getMessageProperties().toString());
-
-
-        System.out.println("收到過期訂單 準備關閉訂單"+ order.getCreate_time());
 
         //TODO檢查訂單狀態 為支付改為 失敗
 

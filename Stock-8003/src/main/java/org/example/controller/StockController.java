@@ -13,6 +13,8 @@ import org.example.exception.AddStockOnDoLogException;
 import org.example.exception.NoStockException;
 import org.example.exception.UpdateStockException;
 import org.example.mq.CheckStockMq;
+import org.example.service.StockMqService;
+import org.example.service.StockSeataService;
 import org.example.service.StockService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
@@ -31,7 +33,13 @@ public class StockController {
 
 
   @Resource
-  public StockService stockService;
+  private StockService stockService;
+
+  @Resource
+  private StockMqService stockMqService;
+
+  @Resource
+  private StockSeataService stockSeataService;
 
   @GetMapping("/getStockById/{id}")
   public BaseResp<Stock> findStockById(@PathVariable("id")Long id){
@@ -74,7 +82,7 @@ public class StockController {
   public BaseResp<String> deductedStockQuantity(@RequestBody @Valid DeductedStockQuantityReq req)
       throws NoStockException {
 
-    boolean b = stockService.deductedStockQuantity(req.getId(), req.getQuantity());
+    boolean b = stockSeataService.deductedStockQuantity(req.getId(), req.getQuantity());
 
     return BaseResp.ok(String.valueOf(b),StatusCode.Success);
   }
@@ -85,7 +93,7 @@ public class StockController {
   @PostMapping("/deductedStockQuantityMq")
   public BaseResp<String> deductedStockQuantityMq(@RequestBody @Valid DeductedStockQuantityMqReq req)
           throws NoStockException, AddStockOnDoLogException {
-    boolean b = stockService.deductedStockQuantityMq(req.getStockId(), req.getOrderId(),req.getQuantity());
+    boolean b = stockMqService.deductedStockQuantityMq(req.getStockId(), req.getOrderId(),req.getQuantity());
     //TODO 失敗返回 deductedStockQuantityMq 失敗本地會回滾 通知order服務 讓order也本地回滾
     return BaseResp.ok(String.valueOf(b),StatusCode.Success);
   }

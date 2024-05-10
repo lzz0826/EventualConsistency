@@ -51,7 +51,11 @@
     WHERE id = #{id}
   </update>
 
-  <select resultMap="BaseResultMap" id="findById" resultType="org.example.entities.Order">
+    <update id="updateOrderStatus">
+      UPDATE `t_order` SET status = #{status} , update_time = #{update_time} WHERE id = #{id}
+    </update>
+
+    <select resultMap="BaseResultMap" id="findById" resultType="org.example.entities.Order">
     SELECT * FROM t_order Where id = #{id};
   </select>
 

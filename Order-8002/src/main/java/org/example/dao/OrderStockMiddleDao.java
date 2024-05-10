@@ -1,5 +1,6 @@
 package org.example.dao;
 
+import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -23,7 +24,10 @@ public interface OrderStockMiddleDao {
 
   public int updateOrderStockMiddle(OrderStockMiddle orderStockMiddle);
 
-  public int updateOrderStatusByOrderIdList(int status , List<Long> orderIds);
+  public int updateOrderStatusByOrderIdList(List<Long> orderIds , int status);
+
+  public int updateOrderStatusByOrderId(Long order_id , int status , Date update_time);
+
 
 
 

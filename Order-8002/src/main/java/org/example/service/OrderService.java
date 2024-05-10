@@ -1,29 +1,16 @@
 package org.example.service;
 
-import static org.example.client.service.StockClientService.RepStock;
-
-import io.seata.core.context.RootContext;
-import io.seata.spring.annotation.GlobalTransactional;
 import jakarta.annotation.Resource;
-import java.math.BigDecimal;
 import java.util.*;
 
 import lombok.extern.log4j.Log4j2;
-import org.example.client.service.StockClientService;
-import org.example.common.BaseResp;
-import org.example.common.StatusCode;
 import org.example.dao.OrderDao;
 import org.example.dao.OrderStockMiddleDao;
 import org.example.entities.Order;
-import org.example.entities.Stock;
 import org.example.entities.middle.OrderStockMiddle;
 import org.example.enums.OrderStatusEnum;
-import org.example.exception.AddOrderException;
-import org.example.exception.AddOrderStockMiddleException;
-import org.example.exception.DeductedStockQuantityException;
-import org.example.exception.NoStockException;
+import org.example.enums.OrderStockMiddleStatusEnum;
 import org.example.exception.NotFoundOrderException;
-import org.example.exception.OkHttpGetException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
@@ -35,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
 
-  @Resource
-  private StockClientService stockClientService;
 
   @Resource
   private OrderDao orderDao;
@@ -58,7 +43,7 @@ public class OrderService {
     //重中間表拿到所有訂單
     List<OrderStockMiddle> orderStockMiddles = orderStockMiddleDao.findOrderIds(orderIds);
 
-    if (orderStockMiddles.size() == 0) {
+    if (orderStockMiddles.isEmpty()) {
       throw new NotFoundOrderException();
     }
 
@@ -85,14 +70,11 @@ public class OrderService {
 
     if(!updateOrderIds.isEmpty()){
       //更新中間表狀態
-      orderStockMiddleDao.updateOrderStatusByOrderIdList(OrderStatusEnum.PayIng.code,
-          updateOrderIds);
+      orderStockMiddleDao.updateOrderStatusByOrderIdList(updateOrderIds, OrderStockMiddleStatusEnum.PayIng.code);
 
     }
 
-
-    List<Order> orderList = getOrderList(updateOrderIds);
-    return orderList;
+      return getOrderList(updateOrderIds);
   }
 
   //根據中間表查詢OrderList
@@ -110,17 +92,14 @@ public class OrderService {
   //取得所有訂單
   public List<Order> getAllOrderList() {
 
-    List<Order> orderList = orderDao.findAll();
-
-    return orderList;
+      return orderDao.findAll();
 
   }
 
 
   //新增訂單
   public boolean addOrder(Order order) {
-    boolean b = orderDao.addOrder(order);
-    return b;
+      return orderDao.addOrder(order);
   }
 
   //更新訂單
@@ -132,13 +111,13 @@ public class OrderService {
 
   //查詢訂單 id
   public Order getOrderById(Long id) {
+      return orderDao.findById(id);
+  }
 
-    Order order = orderDao.findById(id);
+  //更新訂單狀態
+  public int updateOrderStatus(Long id , int status){
+    return orderDao.updateOrderStatus(id,status,new Date());
 
-    if (order != null) {
-      return order;
-    }
-    return null;
   }
 
 }

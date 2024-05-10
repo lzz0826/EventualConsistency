@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import org.example.dao.OrderStockMiddleDao;
 import org.example.entities.middle.OrderStockMiddle;
+import org.example.enums.OrderStockMiddleStatusEnum;
 import org.junit.Test;
 import test.BastTest;
 
@@ -30,14 +31,16 @@ public class OrderStockDaoMapperTest extends BastTest {
 
   @Test
   public void updateOrderStatusByIdListTest(){
-
-
     List<Long> list = new ArrayList<>();
+    list.add(100L);
+    list.add(15L);
+    int i = dao.updateOrderStatusByOrderIdList(list, OrderStockMiddleStatusEnum.PayIng.code);
+    System.out.println(i);
+  }
 
-    list.add(20L);
-    list.add(21L);
-
-    int i = dao.updateOrderStatusByOrderIdList(4,list);
+  @Test
+  public void testUpdateOrderStatusByOrderId(){
+    int i = dao.updateOrderStatusByOrderId(100L , 1,new Date());
     System.out.println(i);
   }
 

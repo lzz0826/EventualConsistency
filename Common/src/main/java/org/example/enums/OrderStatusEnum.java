@@ -3,9 +3,10 @@ package org.example.enums;
 public enum OrderStatusEnum {
 
   Fail("Fail",-1),
+  CreateIng("CreateIng",0),
+
   Success("Success",1),
-  CreateIng("CreateIng",2),
-  PayIng("PayIng",3);
+  PayIng("PayIng",2);
 
 
 

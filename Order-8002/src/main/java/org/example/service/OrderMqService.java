@@ -17,10 +17,15 @@ import org.example.exception.AddOrderException;
 import org.example.exception.AddOrderStockMiddleException;
 import org.example.exception.DeductedStockQuantityException;
 import org.example.exception.NoStockException;
+import org.example.mq.CheckOrderMq;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.example.config.RabbitMqConfig.*;
+
 @Log4j2
 @Service
 public class OrderMqService {
@@ -33,6 +38,11 @@ public class OrderMqService {
 
     @Resource
     private OrderStockMiddleDao orderStockMiddleDao;
+
+    @Resource
+    private RabbitTemplate rabbitTemplate;
+
+
 
     /**
      * 創建訂單 Mq 最終一致
@@ -69,12 +79,22 @@ public class OrderMqService {
             //計算整筆訂單金額
             toToPrice = toToPrice.add(stock.getPrice().multiply(BigDecimal.valueOf(orderQuantity)));
         }
-        //產生訂單   //TODO MQ發消息檢查訂單狀態 通知Stock庫存回滾
+        //產生訂單
         Order order = createOrder(toToPrice);
+
+        CheckOrderMq checkOrderMq = CheckOrderMq
+                .builder()
+                .order_id(order.getId())
+                .build();
+
         for (Stock stock : stocks) {
             deductedStockQuantity(stock.getId(),order.getId(),product_quantity.get(stock.getProduct_name()));
             createOrderStockMiddle(order, stock,product_quantity.get(stock.getProduct_name()));
         }
+
+        //TODO MQ發消息檢查訂單狀態
+        rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Create_Order_Key,checkOrderMq);
+
         return true;
     }
 

@@ -93,4 +93,8 @@
     </foreach>
   </update>
 
+  <update id="updateOrderStatusByOrderId">
+    UPDATE `t_order_stock` SET status = #{status} , update_time = #{update_time} WHERE order_id = #{order_id}
+  </update>
+
 </mapper>

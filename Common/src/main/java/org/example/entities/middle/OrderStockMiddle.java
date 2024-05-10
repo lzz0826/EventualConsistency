@@ -25,6 +25,7 @@ public class OrderStockMiddle {
 
   private Integer deducted_quantity;
 
+  //定單狀態 Fail = -1, Success=1  ,CreateIng = 0
   private Integer status;
 
   private Date update_time;
