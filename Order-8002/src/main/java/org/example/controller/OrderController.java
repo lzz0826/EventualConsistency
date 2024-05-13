@@ -19,7 +19,7 @@ import org.example.service.OrderMqService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.*;
 
-import static org.example.config.RabbitMqConfig.Order_Create_Order_Key;
+import static org.example.mq.MqStaticResource.Order_Create_Order_Key;
 import static org.example.mq.MqStaticResource.Order_Event_Exchange;
 
 @RestController

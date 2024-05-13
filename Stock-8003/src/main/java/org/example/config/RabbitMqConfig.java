@@ -89,7 +89,7 @@ public class RabbitMqConfig {
                 Stock_Release_Stock_Queue_Name,
                 Binding.DestinationType.QUEUE,
                 Order_Event_Exchange,
-                Order_Release_Other_Key,
+                Order_Release_Other_Notify_Key,
                 null);
     }
 

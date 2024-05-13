@@ -33,6 +33,13 @@ public class RabbitMqConfig {
      */
 
     private static final int Order_Delay_Queue_Ttl = 60000;
+
+
+
+    /**
+     *訂單延遲隊列 超時的死信會傳給
+     *Order_Release_OrderQueue_Name
+     */
     @Bean
     public Queue orderDelayQueue(){
 
@@ -55,6 +62,9 @@ public class RabbitMqConfig {
     }
 
 
+    /**
+     *訂單超時驗證隊列
+     */
     @Bean
     public Queue orderReleaseOrderQueue(){
         //String name, boolean durable, boolean exclusive, boolean autoDelete, @Nullable Map<String, Object> arguments
@@ -66,15 +76,20 @@ public class RabbitMqConfig {
                 null);
     }
 
+
+    /**
+     *  訂單交換機
+     */
     @Bean
     public Exchange orderEventExchange(){
 //        String name, boolean durable, boolean autoDelete, Map<String, Object> arguments
         return new TopicExchange(Order_Event_Exchange,true,false);
     }
 
-    //創建訂單綁定
-    public static final String Order_Create_Order_Key = "order.create.order" ;
 
+    /**
+     *  訂單創建綁定
+     */
     @Bean
     public Binding orderCreateOrder(){
 //         @Nullable String destination, DestinationType destinationType,
@@ -88,6 +103,10 @@ public class RabbitMqConfig {
                 null);
     }
 
+
+    /**
+     *  訂單超時確認綁定
+     */
     @Bean
     public Binding orderReleaseOrder(){
 //         @Nullable String destination, DestinationType destinationType,

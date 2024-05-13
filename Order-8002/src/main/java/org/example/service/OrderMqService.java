@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.example.config.RabbitMqConfig.*;
+import static org.example.mq.MqStaticResource.Order_Create_Order_Key;
 import static org.example.mq.MqStaticResource.Order_Event_Exchange;
 
 @Log4j2
