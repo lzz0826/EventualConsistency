@@ -71,7 +71,6 @@ public class OrderService {
     //重中間表拿到所有訂單
     List<OrderStockMiddle> orderStockMiddles = orderStockMiddleDao.findOrderIds(orderIds);
 
-
     if (orderStockMiddles.isEmpty()) {
       throw new NotFoundOrderException();
     }
