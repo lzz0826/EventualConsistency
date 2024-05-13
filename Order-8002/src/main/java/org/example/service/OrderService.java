@@ -26,9 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class OrderService {
 
 
-
   @Resource
   private OrderDao orderDao;
+
+  @Resource
+  private OrderStockMiddleService orderStockMiddleService;
 
   @Resource
   private OrderStockMiddleDao orderStockMiddleDao;
@@ -69,48 +71,24 @@ public class OrderService {
     //重中間表拿到所有訂單
     List<OrderStockMiddle> orderStockMiddles = orderStockMiddleDao.findOrderIds(orderIds);
 
+
     if (orderStockMiddles.isEmpty()) {
       throw new NotFoundOrderException();
     }
+    updateOrderIds = orderStockMiddleService.updateStockMiddlesToPayIng(orderStockMiddles,updateOrderIds);
 
-    //修改每單筆訂單
-    for (OrderStockMiddle orderStockMiddle : orderStockMiddles) {
-      Order order = orderDao.findById(orderStockMiddle.getOrder_id());
-      if (order == null) {
-        throw new NotFoundOrderException();
-      }
-
-
-      //把 CreateIng 訂單改成 PayIng 中間狀態
-      if (order.getStatus() == OrderStatusEnum.CreateIng.code) {
-        Order build = Order.builder().build();
-        build.setId(order.getId());
-        build.setStatus(OrderStatusEnum.PayIng.code);
-        updateOrder(build);
-
-        updateOrderIds.add(orderStockMiddle.getOrder_id());
-      }else {
-        break;
-      }
+    if (updateOrderIds.isEmpty()){
+      throw new NotFoundOrderException();
     }
-
-    if(!updateOrderIds.isEmpty()){
-      //更新中間表狀態
-      orderStockMiddleDao.updateOrderStatusByOrderIdList(updateOrderIds, OrderStockMiddleStatusEnum.PayIng.code);
-
-    }
-      return getOrderList(updateOrderIds);
+    updateOrderStatusByIds(updateOrderIds,OrderStatusEnum.PayIng.code);
+    return getOrderList(updateOrderIds);
   }
 
-  //根據中間表查詢OrderList
-  public List<Order> getOrderList(List<Long> middleOrderIds) {
 
-    List<Order> list = new ArrayList<>();
-    for (Long orderId : middleOrderIds) {
-      Order order = getOrderById(orderId);
-      list.add(order);
-    }
-    return list;
+
+
+  public List<Order> getOrderList(List<Long> orderIds) {
+    return orderDao.findByIds(orderIds);
   }
 
 
@@ -138,10 +116,19 @@ public class OrderService {
       return orderDao.findById(id);
   }
 
+  //查詢訂單 ids
+  public List<Order> getOrderByIds(List<Long> ids) {
+    return orderDao.findByIds(ids);
+  }
+
   //更新訂單狀態
   public int updateOrderStatus(Long id , int status){
     return orderDao.updateOrderStatus(id,status,new Date());
 
+  }
+
+  public int updateOrderStatusByIds(List<Long> ids , int status){
+    return orderDao.updateOrderStatusByIds(ids,status);
   }
 
 }

@@ -87,7 +87,7 @@
 
 
   <update id="updateOrderStatusByOrderIdList" parameterType="java.util.List">
-    UPDATE `t_order_stock` SET status = #{status} WHERE order_id IN
+    UPDATE `t_order_stock` SET status = #{status}, update_time = NOW() WHERE order_id IN
     <foreach item="item" collection="orderIds" open="(" separator="," close=")">
       #{item}
     </foreach>

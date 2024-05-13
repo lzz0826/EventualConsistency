@@ -9,13 +9,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.example.common.BaseResp;
-import org.example.controller.rep.CreateOrderMqReq;
 import org.example.controller.rep.CreateOrderReq;
 import org.example.entities.Order;
 import org.example.exception.*;
 import org.example.service.OrderSeataService;
 import org.example.service.OrderService;
-import org.example.service.OrderMqService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.web.bind.annotation.*;
 

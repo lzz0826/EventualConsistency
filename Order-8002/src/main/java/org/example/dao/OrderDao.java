@@ -14,11 +14,16 @@ public interface OrderDao {
 
   public Order findById(Long id);
 
+  public List<Order> findByIds(List<Long> ids);
+
   public List<Order> findAll();
 
   public int updateOrder(Order order);
 
   public int updateOrderStatus(Long id , int status , Date update_time);
+
+  public int updateOrderStatusByIds(List<Long> ids , int status);
+
 
 
 }

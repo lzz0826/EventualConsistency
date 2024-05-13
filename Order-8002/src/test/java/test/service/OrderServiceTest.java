@@ -28,8 +28,8 @@ public class OrderServiceTest extends BastTest {
   public void updateOrderStatusToPayIngTest() throws NotFoundOrderException {
 
     List<Long> ids = new ArrayList<>();
-    ids.add(20L);
-    ids.add(21L);
+    ids.add(112L);
+    ids.add(111L);
 
 
     List<Order> list = orderService.updateOrderStatusToPayIng(ids);

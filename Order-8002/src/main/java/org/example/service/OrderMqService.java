@@ -101,6 +101,12 @@ public class OrderMqService {
         return true;
     }
 
+    public void updateOrderMq(){
+
+
+
+    }
+
 
 
     /**
@@ -117,6 +123,7 @@ public class OrderMqService {
         //*如果沒有分布式事務 這邊報異常 Order會回滾(沒有天加訂單)
 //    int sdf = 10/0;
     }
+
 
 
 

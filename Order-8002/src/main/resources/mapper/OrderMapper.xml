@@ -55,14 +55,29 @@
       UPDATE `t_order` SET status = #{status} , update_time = #{update_time} WHERE id = #{id}
     </update>
 
-    <select resultMap="BaseResultMap" id="findById" resultType="org.example.entities.Order">
+  <update id="updateOrderStatusByIds" parameterType="java.util.List">
+    UPDATE `t_order` SET status = #{status} , update_time = NOW() WHERE id IN
+    <foreach collection="ids" item="item" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+
+  </update>
+
+  <select resultMap="BaseResultMap" id="findById" resultType="org.example.entities.Order">
     SELECT * FROM t_order Where id = #{id};
   </select>
 
+  <select id="findByIds" resultType="org.example.entities.Order">
+    SELECT * FROM t_order Where id IN
+    <foreach collection="ids" item="item" open="(" close=")" separator=",">
+    #{item}
+  </foreach>
+  </select>
 
   <select resultMap="BaseResultMap" id="findAll" resultType="org.example.entities.Order">
     SELECT * FROM t_order;
   </select>
+
 
 
 
