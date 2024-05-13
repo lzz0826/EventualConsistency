@@ -10,6 +10,7 @@ import org.example.enums.OrderStockMiddleStatusEnum;
 import org.example.service.OrderService;
 import org.example.service.OrderStockMiddleService;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Component;
 
@@ -119,9 +120,9 @@ public class OrderRollbackCheck {
 
     /**
      * 通知 Stock滾回數據 (雙邊驗證)
-     * 通過MQ
+     * 通過MQ 像所有綁定Order_Release_Other_Key的隊列發送回滾消息(需要回滾的所有服務)
      */
-    protected void notifyStockRollback(Long orderId) {
+    public void notifyStockRollback(Long orderId) {
         List<OrderStockMiddle> orderStockMiddles = orderStockMiddleService.findOrderId(orderId);
         for (OrderStockMiddle orderStockMiddle : orderStockMiddles) {
             CheckStockMq checkStockMq = CheckStockMq
@@ -129,7 +130,7 @@ public class OrderRollbackCheck {
                     .stock_id(orderStockMiddle.getStock_id())
                     .order_id(orderId)
                     .build();
-            rabbitTemplate.convertAndSend(Stock_Event_Exchange,Stock_Locked_Key,checkStockMq);
+            rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Release_Other_Key,checkStockMq);
         }
     }
 

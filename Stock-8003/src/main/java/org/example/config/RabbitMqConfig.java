@@ -77,6 +77,22 @@ public class RabbitMqConfig {
                 null);
     }
 
+    /**
+     *  接收Order服務主動回滾訊息 綁定
+     *  Stock_Release_Stock_Queue_Name
+     *  Order_Event_Exchange
+     *  Order_Release_Other_Key
+     */
+    @Bean
+    public Binding OrderReleaseOtherBinding(){
+        return new Binding(
+                Stock_Release_Stock_Queue_Name,
+                Binding.DestinationType.QUEUE,
+                Order_Event_Exchange,
+                Order_Release_Other_Key,
+                null);
+    }
+
 
 
 
