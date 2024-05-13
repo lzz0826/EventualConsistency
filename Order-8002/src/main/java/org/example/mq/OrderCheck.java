@@ -16,16 +16,20 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.util.List;
 
-import static org.example.config.RabbitMqConfig.*;
 import static org.example.mq.MqStaticResource.*;
 
 
 @Component
 @Slf4j
-public class OrderRollbackCheck {
+public class OrderCheck {
     /**
      * 接收創建訂單超過付款時間
      *
+     * 訂單支付(成功):
+     *  通知需要後續處理的其他服務
+     *
+     * 訂單超時(失敗):
+     *  通知需要回滾的其他服務:
      *  需回滾:
      *  1.查無訂單.訂單消失(本地回滾無需處理) 通知Stock服務回滾庫存
      *  2.訂單付款失敗(更新 訂單.中間表 狀態) 通知Stock服務 回滾庫存

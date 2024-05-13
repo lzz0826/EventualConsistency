@@ -33,7 +33,7 @@ public class MqStaticResource {
     //Order服務主動通知(回滾)專用Key(其他服務的回滾 Queue 需要綁定此key)
     public static final String Order_Release_Other_Notify_Key = "order.release.other.#";
 
-    //Order服務主動通知(付款成功)專用Key(其他服務付款成功後續 Queue 需要綁定此key)
+    //Order服務主動通知(付款成功)專用Key(其他服務付款成功後續操作 Queue 需要綁定此key)
     public static final String Order_Finish_Notify_Key = "order.finish.#";
 
 

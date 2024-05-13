@@ -4,7 +4,6 @@ package org.example.mq;
 import com.rabbitmq.client.Channel;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.example.entities.Order;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -21,7 +20,7 @@ import static org.example.mq.MqStaticResource.Order_Release_OrderQueue_Name;
 public class OrderReceiver {
 
     @Resource
-    private OrderRollbackCheck orderRollbackCheck;
+    private OrderCheck orderCheck;
 
     /**
      *  接收創建訂單超過付款時間
@@ -29,7 +28,7 @@ public class OrderReceiver {
     @RabbitHandler
     private void orderReceive(CheckOrderMq checkOrderMq  , Channel channel , Message msg) throws IOException {
         log.info("Received order check: {}", checkOrderMq);
-        orderRollbackCheck.orderCheck(checkOrderMq,channel ,msg);
+        orderCheck.orderCheck(checkOrderMq,channel ,msg);
     }
 
 
