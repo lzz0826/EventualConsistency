@@ -120,7 +120,6 @@ public class OrderRollbackCheck {
     /**
      * 通知 Stock滾回數據 (雙邊驗證)
      * 通過MQ
-     * TODO Order服務死掉 待測試
      */
     protected void notifyStockRollback(Long orderId) {
         List<OrderStockMiddle> orderStockMiddles = orderStockMiddleService.findOrderId(orderId);
