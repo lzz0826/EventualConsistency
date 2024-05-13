@@ -59,12 +59,46 @@ public class OrderStockMiddleService {
 
         checkStatusEnum(orderStockMiddles,updateOrderIds,OrderStatusEnum.CreateIng);
         if(!updateOrderIds.isEmpty()){
-            //更新中間表 sCreateIng 訂單改成 PayIng 中間狀態
+            //更新中間表 CreateIng 訂單改成 PayIng 中間狀態
             orderStockMiddleDao.updateOrderStatusByOrderIdList(updateOrderIds, OrderStockMiddleStatusEnum.PayIng.code);
         }
         return updateOrderIds;
     }
 
+    /**
+     * 更新中間表 返回確定有更新的訂單
+     * 更新訂單狀態 PayIng -> Success
+     **/
+    public List<Long> updateStockMiddlesToSuccess(List<OrderStockMiddle> orderStockMiddles , List<Long> updateOrderIds) throws NotFoundOrderException {
+
+        checkStatusEnum(orderStockMiddles,updateOrderIds,OrderStatusEnum.PayIng);
+        if(!updateOrderIds.isEmpty()){
+            //更新中間表 PayIng 訂單改成 Success 最終狀態
+            orderStockMiddleDao.updateOrderStatusByOrderIdList(updateOrderIds, OrderStockMiddleStatusEnum.Success.code);
+        }
+        return updateOrderIds;
+    }
+
+    /**
+     * 更新中間表 返回確定有更新的訂單
+     * 更新訂單狀態 PayIng -> Fail
+     **/
+    public List<Long> updateStockMiddlesToFail(List<OrderStockMiddle> orderStockMiddles , List<Long> updateOrderIds) throws NotFoundOrderException {
+
+        checkStatusEnum(orderStockMiddles,updateOrderIds,OrderStatusEnum.PayIng);
+        if(!updateOrderIds.isEmpty()){
+            //更新中間表 PayIng 訂單改成 Fail 最終狀態
+            orderStockMiddleDao.updateOrderStatusByOrderIdList(updateOrderIds, OrderStockMiddleStatusEnum.Fail.code);
+        }
+        return updateOrderIds;
+    }
+
+    /**
+     * 檢查更新前狀態
+     * orderStockMiddles
+     * updateOrderIds : 需要更新的OrderId
+     * statusEnum : 檢查更新前的狀態 (不符合流程狀態的不更新)
+     **/
     private void checkStatusEnum(List<OrderStockMiddle> orderStockMiddles,List<Long> updateOrderIds,OrderStatusEnum statusEnum) throws NotFoundOrderException {
         for (OrderStockMiddle orderStockMiddle : orderStockMiddles) {
             Order order = orderDao.findById(orderStockMiddle.getOrder_id());

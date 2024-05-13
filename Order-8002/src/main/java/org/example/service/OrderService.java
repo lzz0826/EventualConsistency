@@ -12,7 +12,6 @@ import org.example.dao.OrderStockMiddleDao;
 import org.example.entities.Order;
 import org.example.entities.middle.OrderStockMiddle;
 import org.example.enums.OrderStatusEnum;
-import org.example.enums.OrderStockMiddleStatusEnum;
 import org.example.exception.AddOrderException;
 import org.example.exception.NotFoundOrderException;
 import org.springframework.stereotype.Service;
@@ -37,7 +36,7 @@ public class OrderService {
 
   /**
    * 創建訂單
-   * toToPrice
+   * toToPrice : 總金額
    **/
   public Order createOrder(BigDecimal toToPrice) throws AddOrderException {
     Order order = Order
@@ -68,12 +67,8 @@ public class OrderService {
     //確定有更新的訂單
     List<Long> updateOrderIds = new ArrayList<>();
 
-    //重中間表拿到所有訂單
-    List<OrderStockMiddle> orderStockMiddles = orderStockMiddleDao.findOrderIds(orderIds);
+    List<OrderStockMiddle> orderStockMiddles = checkOrderStockMiddle(orderIds);
 
-    if (orderStockMiddles.isEmpty()) {
-      throw new NotFoundOrderException();
-    }
     updateOrderIds = orderStockMiddleService.updateStockMiddlesToPayIng(orderStockMiddles,updateOrderIds);
 
     if (updateOrderIds.isEmpty()){
@@ -81,6 +76,21 @@ public class OrderService {
     }
     updateOrderStatusByIds(updateOrderIds,OrderStatusEnum.PayIng.code);
     return getOrderList(updateOrderIds);
+  }
+
+  //TODO 支付中 -> 最終狀態
+
+  /**
+   * 檢查中間表是否存在
+   **/
+  private List<OrderStockMiddle> checkOrderStockMiddle(List<Long> orderIds) throws NotFoundOrderException {
+    //重中間表拿到所有訂單
+    List<OrderStockMiddle> orderStockMiddles = orderStockMiddleDao.findOrderIds(orderIds);
+
+    if (orderStockMiddles.isEmpty()) {
+      throw new NotFoundOrderException();
+    }
+    return orderStockMiddles;
   }
 
 
