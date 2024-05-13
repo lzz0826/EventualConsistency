@@ -81,6 +81,13 @@ public class OrderRollbackCheck {
                     channel.basicAck(msg.getMessageProperties().getDeliveryTag(), false);
                     reQueue = false;
                     break;
+                case -1 :
+                    //訂單已取消 本地不用操作 通知庫存回滾(已有查單給庫存做回滾) 雙邊確認
+                    //TODO 手動更新訂單(用戶支付 或取消API 當下就需要更新訂單和中間表)
+                    notifyStockRollback(order.getId());
+                    reQueue = false;
+                    channel.basicAck(msg.getMessageProperties().getDeliveryTag(), false);
+                    break;
             }
         }catch (Exception e){
             log.error(e.getMessage());

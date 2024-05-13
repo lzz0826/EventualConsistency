@@ -13,10 +13,7 @@ import org.example.entities.Order;
 import org.example.entities.Stock;
 import org.example.entities.middle.OrderStockMiddle;
 import org.example.enums.OrderStatusEnum;
-import org.example.exception.AddOrderException;
-import org.example.exception.AddOrderStockMiddleException;
-import org.example.exception.DeductedStockQuantityException;
-import org.example.exception.NoStockException;
+import org.example.exception.*;
 import org.example.mq.CheckOrderMq;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
@@ -59,6 +56,11 @@ public class OrderMqService {
         }
         //檢查庫存 打Stock服務
         List<Stock> stocks = stockClientService.getStockByProductNames(product_names);
+
+        if (stocks == null) {
+            throw new StockServerErrorException();
+        }
+
         if (product_names.size() != stocks.size()){
             throw new NoStockException();
         }
