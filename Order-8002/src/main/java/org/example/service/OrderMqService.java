@@ -33,10 +33,10 @@ public class OrderMqService {
     private StockClientService stockClientService;
 
     @Resource
-    private OrderDao orderDao;
+    private OrderService orderService;
 
     @Resource
-    private OrderStockMiddleDao orderStockMiddleDao;
+    private OrderStockMiddleService orderStockMiddleService;
 
     @Resource
     private RabbitTemplate rabbitTemplate;
@@ -84,7 +84,7 @@ public class OrderMqService {
             toToPrice = toToPrice.add(stock.getPrice().multiply(BigDecimal.valueOf(orderQuantity)));
         }
         //產生訂單
-        Order order = createOrder(toToPrice);
+        Order order = orderService.createOrder(toToPrice);
 
         CheckOrderMq checkOrderMq = CheckOrderMq
                 .builder()
@@ -93,7 +93,7 @@ public class OrderMqService {
 
         for (Stock stock : stocks) {
             deductedStockQuantity(stock.getId(),order.getId(),product_quantity.get(stock.getProduct_name()));
-            createOrderStockMiddle(order, stock,product_quantity.get(stock.getProduct_name()));
+            orderStockMiddleService.createOrderStockMiddle(order, stock,product_quantity.get(stock.getProduct_name()));
         }
 
         rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Create_Order_Key,checkOrderMq);
@@ -101,24 +101,6 @@ public class OrderMqService {
         return true;
     }
 
-
-    public Order createOrder(BigDecimal toToPrice) throws AddOrderException {
-        Order order = Order
-                .builder()
-                .price(toToPrice)
-                .type(1)
-                .status(OrderStatusEnum.CreateIng.code)
-                .create_time(new Date())
-                .update_time(new Date())
-                .build();
-        Long addOrder = orderDao.addOrderRepId(order);
-        if (addOrder == 0) {
-            log.error(StatusCode.AddOrderFail.msg);
-            throw new AddOrderException();
-        }
-
-        return order;
-    }
 
 
     /**
@@ -137,26 +119,6 @@ public class OrderMqService {
     }
 
 
-    /**
-     * order
-     * stock
-     * deductStockQuantity : 每個庫存需要扣除的數量
-     **/
-    public void createOrderStockMiddle(Order order,Stock stock,int deductStockQuantity) throws AddOrderStockMiddleException {
-        OrderStockMiddle orderStockMiddle = OrderStockMiddle
-                .builder()
-                .order_id(order.getId())
-                .status(order.getStatus())
-                .deducted_quantity(deductStockQuantity)
-                .stock_id(stock.getId())
-                .create_time(new Date())
-                .update_time(new Date())
-                .build();
-        boolean addOrderStockMiddle = orderStockMiddleDao.addOrderStockMiddle(orderStockMiddle);
-        if (!addOrderStockMiddle) {
-            log.error(StatusCode.AddOrderStockMiddleFail.msg);
-            throw new AddOrderStockMiddleException();
-        }
-    }
+
 
 }

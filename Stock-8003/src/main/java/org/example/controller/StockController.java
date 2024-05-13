@@ -43,6 +43,29 @@ public class StockController {
   @Resource
   private StockSeataService stockSeataService;
 
+  /**
+   * 扣庫存 檢查庫存後 在更新(在同一段 sql執行確保原子性)
+   */
+  //Seata 分布式事務測試 @GlobalTransactional
+  @PostMapping("/deductedStockQuantity")
+  public BaseResp<String> deductedStockQuantity(@RequestBody @Valid DeductedStockQuantityReq req)
+          throws NoStockException {
+
+    boolean b = stockSeataService.deductedStockQuantity(req.getId(), req.getQuantity());
+
+    return BaseResp.ok(String.valueOf(b),StatusCode.Success);
+  }
+
+  /**
+   * 扣庫存 使用MQ做最終一致性
+   */
+  @PostMapping("/deductedStockQuantityMq")
+  public BaseResp<String> deductedStockQuantityMq(@RequestBody @Valid DeductedStockQuantityMqReq req)
+          throws NoStockException, AddStockOnDoLogException {
+    boolean b = stockMqService.deductedStockQuantityMq(req.getStockId(), req.getOrderId(),req.getQuantity());
+    return BaseResp.ok(String.valueOf(b),StatusCode.Success);
+  }
+
   @GetMapping("/getStockById/{id}")
   public BaseResp<Stock> findStockById(@PathVariable("id")Long id){
     Stock stock = stockService.getStockById(id);
@@ -76,32 +99,6 @@ public class StockController {
   }
 
 
-  /**
-   * 扣庫存 檢查庫存後 在更新(在同一段 sql執行確保原子性)
-   */
-  //Seata 分布式事務測試 @GlobalTransactional
-  @PostMapping("/deductedStockQuantity")
-  public BaseResp<String> deductedStockQuantity(@RequestBody @Valid DeductedStockQuantityReq req)
-      throws NoStockException {
-
-    boolean b = stockSeataService.deductedStockQuantity(req.getId(), req.getQuantity());
-
-    return BaseResp.ok(String.valueOf(b),StatusCode.Success);
-  }
-
-  /**
-   * 扣庫存 使用MQ做最終一致性
-   */
-  @PostMapping("/deductedStockQuantityMq")
-  public BaseResp<String> deductedStockQuantityMq(@RequestBody @Valid DeductedStockQuantityMqReq req)
-          throws NoStockException, AddStockOnDoLogException {
-    boolean b = stockMqService.deductedStockQuantityMq(req.getStockId(), req.getOrderId(),req.getQuantity());
-    //TODO 失敗返回 deductedStockQuantityMq 失敗本地會回滾 通知order服務 讓order也本地回滾
-    return BaseResp.ok(String.valueOf(b),StatusCode.Success);
-  }
-
-
-
   @Resource
   private RabbitTemplate rabbitTemplate;
 
@@ -117,10 +114,6 @@ public class StockController {
     rabbitTemplate.convertAndSend(Stock_Event_Exchange,Stock_Locked_Key,build);
     return BaseResp.ok("成功");
   }
-
-
-
-
 
 
 }

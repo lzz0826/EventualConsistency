@@ -28,8 +28,6 @@ public class OrderController {
   @Resource
   private OrderService orderService;
   @Resource
-  private OrderMqService orderMqService;
-  @Resource
   private OrderSeataService orderSeataService;
 
 
@@ -53,21 +51,6 @@ public class OrderController {
 
   }
 
-  /**
-   * 創建訂單 Mq 最終一致
-   **/
-  @PostMapping("/createOrderMq")
-  public BaseResp<String> createOrderMq(@RequestBody @Valid CreateOrderMqReq req)
-          throws NoStockException, DeductedStockQuantityException, AddOrderException, AddOrderStockMiddleException {
-
-    boolean order = orderMqService.createOrderMq(req.getProduct_quantity());
-
-    if(order){
-      return BaseResp.ok("成功");
-    }
-    return BaseResp.ok("失敗");
-
-  }
 
   @GetMapping("/getAllOrderList")
   public BaseResp<List<Order>> getAllOrderList(){
@@ -97,8 +80,6 @@ public class OrderController {
             .create_time(new Date())
             .update_time(new Date())
             .build();
-    //TODO 創建訂單 狀態 代支付
-
     //發送MQ延遲隊列 時間超過未支付改成 失敗
     rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Create_Order_Key,build);
     return BaseResp.ok("成功");

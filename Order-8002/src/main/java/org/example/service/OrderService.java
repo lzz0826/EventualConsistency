@@ -1,15 +1,19 @@
 package org.example.service;
 
 import jakarta.annotation.Resource;
+
+import java.math.BigDecimal;
 import java.util.*;
 
 import lombok.extern.log4j.Log4j2;
+import org.example.common.StatusCode;
 import org.example.dao.OrderDao;
 import org.example.dao.OrderStockMiddleDao;
 import org.example.entities.Order;
 import org.example.entities.middle.OrderStockMiddle;
 import org.example.enums.OrderStatusEnum;
 import org.example.enums.OrderStockMiddleStatusEnum;
+import org.example.exception.AddOrderException;
 import org.example.exception.NotFoundOrderException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -28,6 +32,28 @@ public class OrderService {
 
   @Resource
   private OrderStockMiddleDao orderStockMiddleDao;
+
+  /**
+   * 創建訂單
+   * toToPrice
+   **/
+  public Order createOrder(BigDecimal toToPrice) throws AddOrderException {
+    Order order = Order
+            .builder()
+            .price(toToPrice)
+            .type(1)
+            .status(OrderStatusEnum.CreateIng.code)
+            .create_time(new Date())
+            .update_time(new Date())
+            .build();
+    Long addOrder = orderDao.addOrderRepId(order);
+    if (addOrder == 0) {
+      log.error(StatusCode.AddOrderFail.msg);
+      throw new AddOrderException();
+    }
+
+    return order;
+  }
 
 
   /**
@@ -73,7 +99,6 @@ public class OrderService {
       orderStockMiddleDao.updateOrderStatusByOrderIdList(updateOrderIds, OrderStockMiddleStatusEnum.PayIng.code);
 
     }
-
       return getOrderList(updateOrderIds);
   }
 
@@ -95,7 +120,6 @@ public class OrderService {
       return orderDao.findAll();
 
   }
-
 
   //新增訂單
   public boolean addOrder(Order order) {
