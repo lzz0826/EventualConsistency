@@ -50,7 +50,7 @@ public class StockRollbackCheck {
      * 2.訂單狀態為確認
      * 3.其他因素
      */
-    public void stockCheck(CheckStockMq checkStock , Channel channel , Message msg) throws IOException {
+    public void stockCheck(OrderRollbackNotifyMq checkStock , Channel channel , Message msg) throws IOException {
         Long stockUndoLogId = checkStock.getStock_undo_log_id();
         Long stockId = checkStock.getStock_id();
         Long orderId = checkStock.getOrder_id();
@@ -146,12 +146,12 @@ public class StockRollbackCheck {
      * 重新放回隊列 等待下次檢查
      */
     private void reQueueMessage(StockOnDoLog stockOnDoLog, Channel channel, Message msg) throws IOException {
-        CheckStockMq checkStockMq = CheckStockMq.builder()
+        OrderRollbackNotifyMq orderRollbackNotifyMq = OrderRollbackNotifyMq.builder()
                 .stock_undo_log_id(stockOnDoLog.getId())
                 .stock_id(stockOnDoLog.getStock_id())
                 .order_id(stockOnDoLog.getOrder_id())
                 .build();
-        rabbitTemplate.convertAndSend(Stock_Event_Exchange, Stock_Locked_Key, checkStockMq);
+        rabbitTemplate.convertAndSend(Stock_Event_Exchange, Stock_Locked_Key, orderRollbackNotifyMq);
         channel.basicAck(msg.getMessageProperties().getDeliveryTag(), false);
     }
 

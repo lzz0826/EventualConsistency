@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SuccessPayOrderMqReq {
+public class FailPayOrderMqReq {
 
     @NotNull(message = "orderId不能为空")
     public Long orderId;

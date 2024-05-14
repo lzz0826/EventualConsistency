@@ -12,7 +12,7 @@ import org.example.enums.OperationTypeEnum;
 import org.example.enums.StockOnDoLogEnum;
 import org.example.exception.AddStockOnDoLogException;
 import org.example.exception.NoStockException;
-import org.example.mq.CheckStockMq;
+import org.example.mq.OrderRollbackNotifyMq;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -79,13 +79,13 @@ public class StockMqService {
             throw new AddStockOnDoLogException();
         }
         //通知MQ 之後要檢查 訂單打完此扣庫存後是否有回滾 訂單超時為支付也需要回滾
-        CheckStockMq checkStockMq = CheckStockMq
+        OrderRollbackNotifyMq orderRollbackNotifyMq = OrderRollbackNotifyMq
                 .builder()
                 .stock_undo_log_id(stockOnDoLog.getId())
                 .stock_id(stockId)
                 .order_id(orderId)
                 .build();
-        rabbitTemplate.convertAndSend(Stock_Event_Exchange,Stock_Locked_Key,checkStockMq);
+        rabbitTemplate.convertAndSend(Stock_Event_Exchange,Stock_Locked_Key, orderRollbackNotifyMq);
         return true;
 
     }

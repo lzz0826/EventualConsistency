@@ -15,6 +15,7 @@ import org.example.entities.middle.OrderStockMiddle;
 import org.example.enums.OrderStatusEnum;
 import org.example.exception.*;
 import org.example.mq.CheckOrderMq;
+import org.example.mq.OrderRollbackNotifyMq;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -22,8 +23,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.example.config.RabbitMqConfig.*;
-import static org.example.mq.MqStaticResource.Order_Create_Order_Key;
-import static org.example.mq.MqStaticResource.Order_Event_Exchange;
+import static org.example.mq.MqStaticResource.*;
 
 @Log4j2
 @Service
@@ -49,8 +49,8 @@ public class OrderMqService {
      * TODO product_names 改成 stockId
      **/
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-    public boolean createOrderMq(Map<String,Integer> product_quantity)
-            throws NoStockException, AddOrderException, AddOrderStockMiddleException, DeductedStockQuantityException {
+    public Long createOrderMq(Map<String,Integer> product_quantity)
+            throws NoStockException, AddOrderException, AddOrderStockMiddleException, DeductedStockQuantityException, NotFoundOrderException {
 
         List<String> product_names = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : product_quantity.entrySet()) {
@@ -97,13 +97,13 @@ public class OrderMqService {
             orderStockMiddleService.createOrderStockMiddle(order, stock,product_quantity.get(stock.getProduct_name()));
         }
 
+        //訂單 創建中 -> 支付中
+        orderService.updateOrderStatusToPayIng(new ArrayList<>(Collections.singletonList(order.getId())));
+
         //通知MQ
         rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Create_Order_Key,checkOrderMq);
 
-        //TODO 創建中改 支付中
-
-
-        return true;
+        return order.getId();
     }
 
     /**
@@ -119,6 +119,54 @@ public class OrderMqService {
         }
         //*如果沒有分布式事務 這邊報異常 Order會回滾(沒有天加訂單)
 //    int sdf = 10/0;
+    }
+
+
+    /**
+     * 更新訂單狀態 PayIng -> Success (訂單 和 訂單中間表)
+     * 更新多筆訂單 包含中間表 和訂單表 多對多
+     * key : Order_Finish_Key
+     * TODO 超時後就無法再修改訂單狀態 order服務停時 訂單成功API需要處理 需要判斷狀態超時後再做其他處理
+     **/
+    public boolean updateOrderStatusToSuccess(Long orderId) throws NotFoundOrderException, NotFoundUpdateOrderException {
+        List<Order> orders = orderService.updateOrderStatusToSuccess(new ArrayList<>(Collections.singletonList(orderId)));
+        if (!orders.isEmpty()){
+            List<OrderStockMiddle> middles = orderStockMiddleService.findOrderId(orderId);
+            for (OrderStockMiddle middle : middles) {
+                OrderRollbackNotifyMq notifyMq = OrderRollbackNotifyMq
+                        .builder()
+                        .order_id(orderId)
+                        .stock_id(middle.getStock_id())
+                        .build();
+                //通知MQ
+                rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Finish_Key,notifyMq);            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 更新訂單狀態 PayIng -> Fail (訂單 和 訂單中間表)
+     * 更新多筆訂單 包含中間表 和訂單表 多對多
+     * key : Order_Release_Other_Key
+     **/
+    public boolean updateOrderStatusToFail(Long orderId) throws NotFoundOrderException, NotFoundUpdateOrderException {
+        List<Order> orders = orderService.updateOrderStatusToFail(new ArrayList<>(Collections.singletonList(orderId)));
+        if (!orders.isEmpty()){
+            List<OrderStockMiddle> middles = orderStockMiddleService.findOrderId(orderId);
+            for (OrderStockMiddle middle : middles) {
+                OrderRollbackNotifyMq notifyMq = OrderRollbackNotifyMq
+                        .builder()
+                        .order_id(orderId)
+                        .stock_id(middle.getStock_id())
+                        .build();
+                //通知MQ
+                rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Release_Other_Key,notifyMq);
+            }
+            return true;
+        }
+        return false;
+
     }
 
 

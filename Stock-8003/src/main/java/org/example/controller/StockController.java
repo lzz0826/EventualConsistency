@@ -12,7 +12,7 @@ import org.example.entities.Stock;
 import org.example.exception.AddStockOnDoLogException;
 import org.example.exception.NoStockException;
 import org.example.exception.UpdateStockException;
-import org.example.mq.CheckStockMq;
+import org.example.mq.OrderRollbackNotifyMq;
 import org.example.service.StockMqService;
 import org.example.service.StockSeataService;
 import org.example.service.StockService;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static org.example.config.RabbitMqConfig.*;
 import static org.example.mq.MqStaticResource.Stock_Event_Exchange;
 import static org.example.mq.MqStaticResource.Stock_Locked_Key;
 
@@ -104,7 +103,7 @@ public class StockController {
 
   @GetMapping("/testOrderMq")
   private BaseResp<String> testOrderMq(){
-    CheckStockMq build = CheckStockMq
+    OrderRollbackNotifyMq build = OrderRollbackNotifyMq
             .builder()
             .stock_undo_log_id(1L)
             .stock_id(2L)

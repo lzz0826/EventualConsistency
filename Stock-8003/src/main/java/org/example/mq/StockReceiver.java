@@ -37,7 +37,7 @@ public class StockReceiver {
      * 3.其他因素
      */
     @RabbitHandler
-    private void stockReceiver(CheckStockMq checkStock , Channel channel , Message msg) throws IOException {
+    private void stockReceiver(OrderRollbackNotifyMq checkStock , Channel channel , Message msg) throws IOException {
         log.info("Received stock check: {}", checkStock);
         stockRollbackCheck.stockCheck(checkStock,channel,msg);
     }

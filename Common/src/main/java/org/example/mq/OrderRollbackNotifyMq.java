@@ -9,7 +9,11 @@ import lombok.experimental.Accessors;
 @ToString
 @Accessors(chain = true)//鏈式風格訪問
 @Builder
-public class CheckStockMq {
+
+/**
+ * 通用 Order 回滾訊息
+ */
+public class OrderRollbackNotifyMq {
 
     private Long stock_undo_log_id;
 

@@ -57,6 +57,9 @@ public enum StatusCode {
 
   OrderServerError(2007,"Order服務異常"),
 
+  NotFoundUpdateOrder(2008,"找不到需要更新的訂單"),
+
+
 
  /**
    * Stock 3000
