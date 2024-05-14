@@ -6,13 +6,9 @@ import java.util.*;
 
 import lombok.extern.log4j.Log4j2;
 import org.example.client.service.StockClientService;
-import org.example.common.StatusCode;
-import org.example.dao.OrderDao;
-import org.example.dao.OrderStockMiddleDao;
 import org.example.entities.Order;
 import org.example.entities.Stock;
 import org.example.entities.middle.OrderStockMiddle;
-import org.example.enums.OrderStatusEnum;
 import org.example.exception.*;
 import org.example.mq.CheckOrderMq;
 import org.example.mq.OrderRollbackNotifyMq;
@@ -22,7 +18,6 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.example.config.RabbitMqConfig.*;
 import static org.example.mq.MqStaticResource.*;
 
 @Log4j2
