@@ -52,7 +52,6 @@ public class OrderService {
       log.error(StatusCode.AddOrderFail.msg);
       throw new AddOrderException();
     }
-
     return order;
   }
 
@@ -62,8 +61,7 @@ public class OrderService {
    * 更新多筆訂單 包含中間表 和訂單表 多對多
    **/
   @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
-  public List<Order> updateOrderStatusToPayIng(List<Long> orderIds)
-      throws NotFoundOrderException {
+  public List<Order> updateOrderStatusToPayIng(List<Long> orderIds) throws NotFoundOrderException {
     //確定有更新的訂單
     List<Long> updateOrderIds = new ArrayList<>();
 
@@ -78,7 +76,43 @@ public class OrderService {
     return getOrderList(updateOrderIds);
   }
 
-  //TODO 支付中 -> 最終狀態
+  /**
+   * 更新訂單狀態 PayIng -> Success (訂單 和 訂單中間表)
+   * 更新多筆訂單 包含中間表 和訂單表 多對多
+   **/
+  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+  public List<Order> updateOrderStatusToSuccess(List<Long> orderIds) throws NotFoundOrderException {
+    List<Long> updateOrderIds = new ArrayList<>();
+
+    List<OrderStockMiddle> orderStockMiddles = checkOrderStockMiddle(orderIds);
+
+    updateOrderIds = orderStockMiddleService.updateStockMiddlesToSuccess(orderStockMiddles,updateOrderIds);
+
+    if (updateOrderIds.isEmpty()){
+      throw new NotFoundOrderException();
+    }
+    updateOrderStatusByIds(updateOrderIds,OrderStatusEnum.Success.code);
+    return getOrderList(updateOrderIds);
+  }
+
+  /**
+   * 更新訂單狀態 PayIng -> Success (訂單 和 訂單中間表)
+   * 更新多筆訂單 包含中間表 和訂單表 多對多
+   **/
+  @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
+  public List<Order> updateOrderStatusToFail(List<Long> orderIds) throws NotFoundOrderException {
+    List<Long> updateOrderIds = new ArrayList<>();
+
+    List<OrderStockMiddle> orderStockMiddles = checkOrderStockMiddle(orderIds);
+
+    updateOrderIds = orderStockMiddleService.updateStockMiddlesToFail(orderStockMiddles,updateOrderIds);
+
+    if (updateOrderIds.isEmpty()){
+      throw new NotFoundOrderException();
+    }
+    updateOrderStatusByIds(updateOrderIds,OrderStatusEnum.Fail.code);
+    return getOrderList(updateOrderIds);
+  }
 
   /**
    * 檢查中間表是否存在

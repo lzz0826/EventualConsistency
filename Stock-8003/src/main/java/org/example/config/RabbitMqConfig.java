@@ -81,7 +81,7 @@ public class RabbitMqConfig {
      *  接收Order服務主動回滾訊息 綁定
      *  Stock_Release_Stock_Queue_Name
      *  Order_Event_Exchange
-     *  Order_Release_Other_Key
+     *  Order_Release_Other_Notify_Key
      */
     @Bean
     public Binding OrderReleaseOtherBinding(){

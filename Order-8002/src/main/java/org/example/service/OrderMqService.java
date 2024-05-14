@@ -46,6 +46,7 @@ public class OrderMqService {
     /**
      * 創建訂單 Mq 最終一致
      * 一個訂單 多個庫存(產品)
+     * TODO product_names 改成 stockId
      **/
     @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.REPEATABLE_READ, rollbackFor = Exception.class)
     public boolean createOrderMq(Map<String,Integer> product_quantity)
@@ -96,18 +97,14 @@ public class OrderMqService {
             orderStockMiddleService.createOrderStockMiddle(order, stock,product_quantity.get(stock.getProduct_name()));
         }
 
+        //通知MQ
         rabbitTemplate.convertAndSend(Order_Event_Exchange,Order_Create_Order_Key,checkOrderMq);
+
+        //TODO 創建中改 支付中
+
 
         return true;
     }
-
-    public void updateOrderMq(){
-
-
-
-    }
-
-
 
     /**
      * stockId

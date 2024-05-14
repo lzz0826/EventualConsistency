@@ -39,7 +39,7 @@ public class OrderMqController {
 
 
     /**
-     * 創建訂單 Mq 最終一致
+     * 修改訂單 Mq 最終一致
      **/
     @PostMapping("/successPayOrderMq")
     public BaseResp<String> successPayOrderMq(@RequestBody @Valid SuccessPayOrderMqReq req) {

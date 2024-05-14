@@ -25,7 +25,7 @@ public class RollbackStockHandler {
     private StockOnDoLogService stockOnDoLogService;
 
     /**
-     * 滾回數據
+     * 滾回數據 ** 必须確認没有回滚過才能執行 必免多個消息多次執行
      * 確保操作日誌 未回滾狀態才能執行(同事務)
      * @Transactional 不能放在@RabbitListener()下 需要自己一個類不能間接調用(間接調用會無效)
      */
