@@ -27,7 +27,7 @@
 >&nbsp;&nbsp;需要回滾:<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;1.訂單確認支付後 確定庫存可以後不需要補償<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;2.訂單創建完後超時為支付 庫存需要回滾(需要打訂單API)<br />
-<br />
+><br />
 >&nbsp;&nbsp;返回隊列:<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;1.訂單服務連不到<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;2.訂單狀態為確認<br />
