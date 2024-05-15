@@ -5,15 +5,29 @@
 ![image](https://github.com/lzz0826/EventualConsistency/blob/main/img/10.png)
 
 ## 訂單服務：
->訂單支付(成功):<br />&nbsp;&nbsp;通知需要後續處理的其他服務<br /><br />訂單超時(失敗):<br />&nbsp;&nbsp;通知需要回滾的其他服務<br />&nbsp;&nbsp;需回滾:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 .查無訂單.訂單消失(本地回滾無需處理) 通知Stock服務回滾庫存<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.訂單付款失敗(更新 訂單.中間表 狀態) 通知Stock服務 回滾庫存<br /><br />&nbsp;&nbsp;不需回滾:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.訂單成功(更新 訂單.中間表 狀態)<br /><br />&nbsp;&nbsp;放回隊列:<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.其他狀況<br />
-
+>訂單支付(成功):<br />
+>&nbsp;&nbsp;通知需要後續處理的其他服務<br />
+><br />
+>訂單超時(失敗):<br />
+>&nbsp;&nbsp;通知需要回滾的其他服務<br />
+>&nbsp;&nbsp;需回滾:<br />
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1 .查無訂單.訂單消失(本地回滾無需處理) 通知Stock服務回滾庫存<br />
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2.訂單付款失敗(更新 訂單.中間表 狀態) 通知Stock服務 回滾庫存<br />
+><br />
+>&nbsp;&nbsp;不需回滾:<br />
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.訂單成功(更新 訂單.中間表 狀態)<br />
+><br />
+>&nbsp;&nbsp;放回隊列:<br />
+>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1.其他狀況<br />
 
 ## 庫存服務：
 >&nbsp;&nbsp;不需要回滾:<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;1.訂單確認支付後 確定庫存可以後不需要補償<br />
+><br />
 >&nbsp;&nbsp;需要回滾:<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;1.訂單確認支付後 確定庫存可以後不需要補償<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;2.訂單創建完後超時為支付 庫存需要回滾(需要打訂單API)<br />
+<br />
 >&nbsp;&nbsp;返回隊列:<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;1.訂單服務連不到<br />
 >&nbsp;&nbsp;&nbsp;&nbsp;2.訂單狀態為確認<br />
