@@ -1,7 +1,9 @@
 # EventualConsistency
-
+<br /><br />
 # DB資料庫最終一致性:
 
+
+### 參考架構(使用RabbitMQ):
 ![image](https://github.com/lzz0826/EventualConsistency/blob/main/img/10.png)
 
 ## 訂單服務：
@@ -34,6 +36,10 @@
 >&nbsp;&nbsp;&nbsp;&nbsp;3.其他因素<br />
 
 
+<br />
+<br />
+
+![image](https://github.com/lzz0826/EventualConsistency/blob/main/img/15.jpeg)
 
 
 # DB資料庫強一致:
