@@ -213,6 +213,34 @@
           </delimiters>
         </configuration>
       </plugin>
+
+<!--      &lt;!&ndash;  spring boot maven 打包    &ndash;&gt;-->
+<!--      <plugin>-->
+<!--        <groupId>org.springframework.boot</groupId>-->
+<!--        <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--        <version>3.1.1</version>  &lt;!&ndash; 使用你的 Spring Boot 版本 &ndash;&gt;-->
+<!--        <executions>-->
+<!--          <execution>-->
+<!--            <goals>-->
+<!--              <goal>repackage</goal>-->
+<!--            </goals>-->
+<!--          </execution>-->
+<!--        </executions>-->
+<!--      </plugin>-->
+<!--      &lt;!&ndash;  java 打包 &ndash;&gt;-->
+<!--      <plugin>-->
+<!--        <groupId>org.apache.maven.plugins</groupId>-->
+<!--        <artifactId>maven-jar-plugin</artifactId>-->
+<!--        <version>3.2.0</version>-->
+<!--        <configuration>-->
+<!--          <archive>-->
+<!--            <manifest>-->
+<!--              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>-->
+<!--              <mainClass>com.example.MainClass</mainClass> &lt;!&ndash; 將 com.example.MainClass 替換為你的主類全名 &ndash;&gt;-->
+<!--            </manifest>-->
+<!--          </archive>-->
+<!--        </configuration>-->
+<!--      </plugin>-->
     </plugins>
   </build>
 
